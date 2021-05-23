@@ -1,0 +1,80 @@
+@use "sass:map";
+@use '../variables';
+@use '../component/header';
+@use '../component/breadcrumb';
+@use '../component/footer';
+
+.contacts_container {
+    padding-top: 14px;
+    padding-bottom: 50px;
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        padding-bottom: 80px;
+    }
+}
+
+.contacts_title {
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.43;
+    font-family: map.get(variables.$fonts, 'secondary');
+    letter-spacing: 0px;
+    color: #303043;
+}
+
+.contacts_contact {
+    margin-bottom: .3em;
+
+    span, a {
+        font-size: 18px;
+        font-weight: 600;
+        color: #000;
+    }
+    a {
+        &:hover {
+            color: map.get(variables.$colors, 'primary');
+            text-decoration: underline;
+        }
+    }
+}
+
+.contacts_notice {
+    margin-top: 40px;
+}
+
+.contacts_form-wrapper {
+    padding: 35px 25px;
+    background-color: #f7f7f7;
+    margin-top: 35px;
+}
+
+.contacts_input, .contacts_textarea {
+    border: none;
+    background: #fff;
+    margin: 0 0 2px;
+    color: #000;
+    font-family: map.get(variables.$fonts, 'secondary');
+    width: 100%;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 1.17em 2.1em;
+    line-height: 1;
+    font-size: .875rem;
+    font-weight: 500;
+}
+
+.contacts_textarea {
+    resize: vertical;
+    overflow: auto;
+    min-height: 96px;
+}
+
+.contacts_btn {
+    display: block;
+    margin-top: 26px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: .875rem;
+    line-height: 1;
+    padding: 1.17em 2.1em;
+}

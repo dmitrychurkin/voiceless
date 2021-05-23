@@ -1,0 +1,209 @@
+@use "sass:map";
+@use '../variables';
+
+.header {
+    padding-bottom: 25px;
+    padding-top: 20px;
+    transition: .3s ease-in-out;
+    background-color: #fff;
+
+    @media (min-width: map.get(variables.$breakpoints, 's')) {
+        background-color: transparent;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        padding: 0;
+    }
+}
+
+.header_wrap {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
+
+    @media (min-width: map.get(variables.$breakpoints, 'xs')) {
+          max-width: 576px;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 's')) {
+        max-width: 720px;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        max-width: 940px;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'l')) {
+        max-width: 1140px;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'xl')) {
+        max-width: 1200px;
+    }
+}
+
+.header_flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.branding {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+
+    @media (min-width: map.get(variables.$breakpoints, 's')) {
+        margin-top: 0;
+    }
+}
+
+.branding_logo-link {
+    display: block;
+    background: url(/img/logo.png) no-repeat;
+    background-size: 115px;
+    background-position: center;
+    width: 70px;
+    height: 70px;
+}
+
+.navigation {
+    padding-top: 1.9em;
+    width: 100%;
+
+    &.active {
+        .navigation_toggle {
+            i::before {
+                content: '\f00d';
+            }
+        }
+
+        .navigation_menu {
+            height: 205px;
+            padding: 20px 0;
+            margin-top: 30px;
+            opacity: 1;
+        }
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        padding-top: 0;
+    }
+}
+
+.navigation_toggle {
+    cursor: pointer;
+    color: #000;
+    background: 0 0;
+    border: none;
+    font-size: 1.875rem;
+    margin: auto;
+    display: block;
+
+    @media (min-width: map.get(variables.$breakpoints, 's')) {
+        display: none;
+    }
+    span {
+        font-family: map.get(variables.$fonts, 'secondary');
+        margin-left: 20px;
+        display: inline-block;
+    }
+}
+
+.navigation_menu {
+    overflow: hidden;
+    height: 0;
+    list-style: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: .3s ease-in-out;
+
+    @media (min-width: map.get(variables.$breakpoints, 's')) {
+        height: auto;
+        opacity: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        justify-content: flex-end;
+    }
+}
+
+.navigation_menu-item {
+    color: #000;
+    font-weight: 700;
+    font-size: 18px;
+    border-bottom: 1px solid #f5f1e4;
+    margin: 0 0 10px;
+    padding-top: 0;
+    padding-bottom: 10px;
+    line-height: 1.7;
+    position: relative;
+
+    &:hover {
+        & > a {
+            color: map.get(variables.$colors, 'primary');
+        }
+
+        @media (min-width: map.get(variables.$breakpoints, 'm')) {
+            &:before {
+                background-color: map.get(variables.$colors, 'primary');
+                height: 5px;
+            }
+        }
+    }
+
+    &.active {
+        & > a {
+            color: map.get(variables.$colors, 'primary');
+        }
+    }
+
+    & > a {
+        transition: .2s ease-in-out;
+        padding: 0 13px;
+        font-family:  map.get(variables.$fonts, 'secondary');
+        color: #000;
+        display: block;
+        text-decoration: none;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 14px;
+        font-size: .875rem;
+        font-weight: 600;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 's')) {
+        margin-right: 7px;
+        padding: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        padding: 51px 0 28px;
+
+        &:before {
+            content: "";
+            position: absolute;
+            transition: height .3s ease-out;
+            height: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+}

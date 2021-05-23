@@ -1,0 +1,45 @@
+@use "sass:map";
+@use '../variables';
+
+.breadcrumbs {
+    background-color: #f7f7f7;
+    padding: 1.5em 0;
+
+    @media (min-width: map.get(variables.$breakpoints, 's')) {
+        margin-top: 11rem;
+    }
+
+    @media (min-width: map.get(variables.$breakpoints, 'm')) {
+        margin-top: 8rem;
+    }
+}
+
+.breadcrumbs_container {
+    display: flex;
+}
+
+.breadcrumbs_item {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1;
+    font-family: map.get(variables.$fonts, 'secondary');
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.breadcrumbs_item-link {
+    color: #000;
+
+    &:hover {
+        color: map.get(variables.$colors, 'primary');
+    }
+}
+
+.breadcrumbs_separator {
+    margin: 0 .8rem;
+}
+
+.breadcrumbs_item-target {
+    font-weight: 700;
+}

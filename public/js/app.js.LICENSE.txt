@@ -1,0 +1,15 @@
+/*!
+* FitText.js 1.2
+*
+* Copyright 2011, Dave Rupert http://daverupert.com
+* Released under the WTFPL license
+* http://sam.zoy.org/wtfpl/
+*
+* Date: Thu May 05 14:23:00 2011 -0600
+*/
+
+/*! jQuery Migrate v1.4.1 | (c) jQuery Foundation and other contributors | jquery.org/license */
+
+/*! jQuery Mobile v1.4.5 | Copyright 2010, 2014 jQuery Foundation, Inc. | jquery.org/license */
+
+/*!jQuery v1.12.4 | (c) jQuery Foundation | jquery.org/license*/
