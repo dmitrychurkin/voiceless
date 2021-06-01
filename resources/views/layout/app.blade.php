@@ -17,7 +17,7 @@
         <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
         @stack('scripts')
     </head>
-    <body class="{{Route::current()->getName()}}">
+    <body class="{{Route::currentRouteName()}}">
         <div class="page-preloader-cover">
             <div class="page-preloader">
                 <div class="page-preloader__cube "></div>

@@ -32,7 +32,7 @@ class ContactFormController extends Controller
 EOD;
 
             $mes->from($email, $name)
-                ->to(env('MAIL_FROM_ADDRESS'))
+                ->to(config('mail.from.address'))
                 ->subject("Email from {$name}")
                 ->setBody($emailBody, 'text/html');
         });

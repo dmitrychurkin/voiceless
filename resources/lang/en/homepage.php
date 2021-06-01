@@ -19,6 +19,7 @@ return [
         'link' => 'view gallery'
     ],
     'blog' => [
+        'title_support' => 'Project need your support',
         'title' => 'Our Petcare Blog',
         'link' => 'view all news'
     ],

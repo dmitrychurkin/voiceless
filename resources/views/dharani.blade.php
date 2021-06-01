@@ -164,8 +164,13 @@
 </section>
 <section class="blog section">
     <div class="section-container">
-        <h2 class="section-title invert">{{__('homepage.blog.title')}}:</h2>
-        <div class="blog_posts">
+        <h2 class="section-title invert">{{__('homepage.blog.title_support')}}:</h2>
+        <div class="bank-details">
+            <p>Commercial Bank Kalutara Branch</p>
+            <p>Account name: N.Dharini</p>
+            <p>Account number: 8267000216</p>
+        </div>
+        <!-- <div class="blog_posts">
             <article class="blog_post">
                 <div class="blog_post__img-container">
                     <a href="{{url('/posts/1')}}" class="blog_post__link">
@@ -212,7 +217,7 @@
                 </div>
             </article>
         </div>
-        <a class="blog_link btn primary" href="{{url('/posts')}}">{{__('homepage.blog.link')}}</a>
+        <a class="blog_link btn primary" href="{{url('/posts')}}">{{__('homepage.blog.link')}}</a> -->
     </div>
 </section>
 <section class="subscription section">

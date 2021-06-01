@@ -11,11 +11,13 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/module/home.js', 'public/js')
-    .js('resources/js/module/contacts.js', 'public/js')
-    .sass('resources/sass/view/home.scss', 'public/css')
-    .sass('resources/sass/view/contacts.scss', 'public/css')
-    .sass('resources/sass/theme.scss', 'public/css');
+mix
+    // .sass('resources/sass/view/home.scss', 'public/css')
+    // .sass('resources/sass/view/contacts.scss', 'public/css')
+    // .sass('resources/sass/theme.scss', 'public/css')
+    // .js('resources/js/module/home.js', 'public/js')
+    // .js('resources/js/module/contacts.js', 'public/js')
+    .react('resources/js/module/admin/index.jsx', 'public/js/admin.js');
 
 if (mix.inProduction()) {
     mix.version();
