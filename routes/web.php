@@ -34,7 +34,8 @@ Route::prefix('admin')->group(function () {
 
     // Dashboard
     Route::middleware('auth:sanctum')->group(function () {
-        Route::view('dashboard', 'admin')->name('dashboard');
+        Route::view('dashboard', 'admin')->name('dashboard.root');
+        Route::view('dashboard/general', 'admin')->name('dashboard.general');
     });
 });
 
