@@ -28,9 +28,9 @@ class AuthController extends Controller
      *
      * @param AuthenticateRequest $request
      * @return \Illuminate\Http\Response
-     *          |\Illuminate\Contracts\Routing\ResponseFactory
-     *          |\Illuminate\Http\RedirectResponse
-     *          |\Illuminate\Http\JsonResponse
+     *         |\Illuminate\Contracts\Routing\ResponseFactory
+     *         |\Illuminate\Http\RedirectResponse
+     *         |\Illuminate\Http\JsonResponse
      */
     public function authenticate(AuthenticateRequest $request)
     {
