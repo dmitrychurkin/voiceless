@@ -1,4 +1,5 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback } from 'react';
+import { useFormik } from 'formik';
 import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -17,7 +18,7 @@ const Auth = ({
     title,
     actionText,
     formProps,
-    formState: fS,
+    formikConfig,
     linkProps,
     children
 }) => {
@@ -29,58 +30,31 @@ const Auth = ({
         }
     });
 
-    const formRef = useRef({ ...fS });
-
-    const [formState, setFormState] = useState(() => formRef.current);
-    const [isProcessing, setProcessingState] = useState(false);
-
-    const onChange = useCallback(({ target: { type, checked, name, value } }) => {
-        const res = ['radio', 'checkbox'].includes(type.toLowerCase()) ? checked : value;
-
-        setFormState(state => ({
-            ...state,
-            [name]: res
-        }));
-
-        formRef.current[name] = res;
-    }, []);
-
-    const resetForm = useCallback(() => {
-        setFormState(state => ({
-            ...state,
-            ...fS
-        }));
-    }, [fS]);
-
-    const onSubmit = useCallback(async e => {
-        e.preventDefault();
-        setProcessingState(true);
-
+    const onSubmit = useCallback(async (values, actions) => {
         try {
             await axios.get('/sanctum/csrf-cookie');
-
-            await formProps.onSubmit?.({
-                event: e,
-                formData: new FormData(e.target),
-                formState: formRef.current,
-                resetForm,
+            await formikConfig.onSubmit({
+                values,
+                actions,
                 open
             });
         }catch (err) {
             const { response } = err;
             open(response?.data.message || response?.statusText || err.message);
         }finally {
-            setProcessingState(false);
+            actions.resetForm();
+            actions.validateForm();
         }
     }, [
-        formProps.onSubmit,
-        resetForm,
+        formikConfig.onSubmit,
         open
     ]);
 
-    useEffect(() => {
-        formRef.current = formState;
-    }, [formState]);
+    const formik = useFormik({
+        validateOnMount: true,
+        ...formikConfig,
+        onSubmit
+    });
 
     return (
         <>
@@ -96,15 +70,15 @@ const Auth = ({
                             method='post'
                             {...formProps}
                             className={classes.form}
-                            onSubmit={onSubmit}
+                            onSubmit={formik.handleSubmit}
                         >
-                            {children(formState, onChange)}
+                            {children(formik)}
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                disabled={isProcessing}
+                                disabled={!formik.isValid || formik.isSubmitting}
                                 className={classes.submit}
                             >
                                 {actionText}
@@ -135,7 +109,7 @@ const Auth = ({
 
 Auth.defaultProps = {
     avatarIcon: LockOutlinedIcon,
-    formState: {},
+    formikConfig: {},
     formProps: {},
     linkProps: {
         href: '/admin/login',

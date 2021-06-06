@@ -1,4 +1,4 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[7],{
 
 /***/ "./resources/js/module/admin/screens/Login/Login.jsx":
 /*!***********************************************************!*\
@@ -53,13 +53,13 @@ var Login = function Login() {
 
   var onSubmit = Object(react__WEBPACK_IMPORTED_MODULE_1__["useCallback"])( /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
-      var values, open, _yield$axios$post, data;
+      var values, actions, open, _yield$axios$post, data;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              values = _ref.values, open = _ref.open;
+              values = _ref.values, actions = _ref.actions, open = _ref.open;
               _context.next = 3;
               return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/admin/login', _objectSpread(_objectSpread({}, values), {}, _defineProperty({}, formSchema.remember, values[formSchema.remember] || undefined)));
 
@@ -72,8 +72,9 @@ var Login = function Login() {
               }
 
               open(data.message);
+              actions.resetForm();
 
-            case 7:
+            case 8:
             case "end":
               return _context.stop();
           }

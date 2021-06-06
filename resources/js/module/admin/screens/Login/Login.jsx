@@ -1,33 +1,46 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import axios from 'axios';
+import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Auth from '../../templates/Auth';
 
-const Login = () => {
-    const formSchema = useMemo(() => ({
-        email: 'email',
-        password: 'password',
-        remember: 'remember'
-    }), []);
+const formSchema = {
+    email: 'email',
+    password: 'password',
+    remember: 'remember'
+};
 
+const validationSchema = yup.object({
+    [formSchema.email]: yup
+        .string('Enter your email')
+        .email('Enter a valid email')
+        .required('Email is required'),
+    [formSchema.password]: yup
+        .string('Enter your password')
+        .required('Password is required'),
+    [formSchema.remember]: yup
+        .boolean()
+        .optional()
+});
+
+const Login = () => {
     const onSubmit = useCallback(async ({
-        formData,
-        formState,
+        values,
         open
     }) => {
-        if (formState[formSchema.remember]) {
-            formData.set(formSchema.remember, 1);
-        }
-
-        const { data } = await axios.post('/admin/login', formData);
+        const { data } = await axios.post('/admin/login', {
+            ...values,
+            [formSchema.remember]: values[formSchema.remember] || undefined
+        });
 
         if (!data) {
             window.location.reload();
         }
+
         open(data.message);
-    }, [formSchema]);
+    }, []);
 
     return (
         <Auth
@@ -37,16 +50,17 @@ const Login = () => {
                 href: 'forgot-password',
                 text: 'Forgot password?'
             }}
-            formProps={{
-                onSubmit
-            }}
-            formState={{
-                [formSchema.email]: '',
-                [formSchema.password]: '',
-                [formSchema.remember]: false
+            formikConfig={{
+                onSubmit,
+                initialValues: {
+                    [formSchema.email]: '',
+                    [formSchema.password]: '',
+                    [formSchema.remember]: false
+                },
+                validationSchema
             }}
         >
-            {(formState, onChange) => (
+            {formik => (
                 <>
                     <TextField
                         type='email'
@@ -60,8 +74,9 @@ const Login = () => {
                         autoComplete="email"
                         autoFocus
                         required
-                        value={formState[formSchema.email]}
-                        onChange={onChange}
+                        value={formik.values[formSchema.email]}
+                        error={formik.touched[formSchema.email] && Boolean(formik.errors[formSchema.email])}
+                        onChange={formik.handleChange}
                     />
                     <TextField
                         variant="outlined"
@@ -74,8 +89,9 @@ const Login = () => {
                         id="password"
                         autoComplete="current-password"
                         required
-                        value={formState[formSchema.password]}
-                        onChange={onChange}
+                        value={formik.values[formSchema.password]}
+                        error={formik.touched[formSchema.password] && Boolean(formik.errors[formSchema.password])}
+                        onChange={formik.handleChange}
                     />
                     <FormControlLabel
                         control={(
@@ -83,8 +99,8 @@ const Login = () => {
                                 value="remember"
                                 color="primary"
                                 name={formSchema.remember}
-                                checked={formState[formSchema.remember]}
-                                onChange={onChange}
+                                checked={formik.values[formSchema.remember]}
+                                onChange={formik.handleChange}
                             />
                         )}
                         label="Remember me"

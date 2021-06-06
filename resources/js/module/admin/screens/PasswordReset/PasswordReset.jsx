@@ -1,8 +1,30 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import axios from 'axios';
+import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Auth from '../../templates/Auth';
+
+const formSchema = {
+    email: 'email',
+    password: 'password',
+    passwordConfirmation: 'password_confirmation',
+    token: 'token'
+};
+
+const validationSchema = yup.object({
+    [formSchema.email]: yup
+        .string('Enter your email')
+        .email('Enter a valid email')
+        .required('Email is required'),
+    [formSchema.password]: yup
+        .string('Enter your password')
+        .required('Password is required'),
+    [formSchema.passwordConfirmation]: yup
+        .string()
+        .oneOf([yup.ref(formSchema.password), null], 'Passwords must match')
+        .required()
+});
 
 const PasswordReset = () => {
     const [searchParams] = useSearchParams();
@@ -11,35 +33,20 @@ const PasswordReset = () => {
 
     const navigate = useNavigate();
 
-    const formSchema = useMemo(() => ({
-        email: 'email',
-        password: 'password',
-        passwordConfirmation: 'password_confirmation',
-        token: 'token'
-    }), []);
-
-    const userEmail = searchParams.get(formSchema.email);
-
     const onSubmit = useCallback(async ({
-        formData,
-        resetForm,
+        values,
         open
     }) => {
-        formData.set(formSchema.token, token);
-        formData.set(formSchema.email, userEmail);
-
-        const { data } = await axios.post('/admin/reset-password', formData);
-
-        resetForm();
+        const { data } = await axios.post('/admin/reset-password', {
+            ...values,
+            [formSchema.token]: token
+        });
 
         open(data.message, {
             onExited: () => navigate('/admin/login')
         });
-
     }, [
-        formSchema,
         token,
-        userEmail,
         navigate
     ]);
 
@@ -47,15 +54,17 @@ const PasswordReset = () => {
         <Auth
             title='Reset Password'
             actionText='reset'
-            formProps={{
-                onSubmit
-            }}
-            formState={{
-                [formSchema.password]: '',
-                [formSchema.passwordConfirmation]: ''
+            formikConfig={{
+                onSubmit,
+                initialValues: {
+                    [formSchema.email]: searchParams.get(formSchema.email),
+                    [formSchema.password]: '',
+                    [formSchema.passwordConfirmation]: ''
+                },
+                validationSchema
             }}
         >
-            {(formState, onChange) => (
+            {formik => (
                 <>
                     <TextField
                         type='email'
@@ -70,7 +79,9 @@ const PasswordReset = () => {
                         autoFocus
                         required
                         disabled
-                        defaultValue={userEmail}
+                        value={formik.values[formSchema.email]}
+                        error={formik.touched[formSchema.email] && Boolean(formik.errors[formSchema.email])}
+                        onChange={formik.handleChange}
                     />
                     <TextField
                         variant="outlined"
@@ -83,8 +94,9 @@ const PasswordReset = () => {
                         id="password"
                         autoComplete="current-password"
                         required
-                        value={formState[formSchema.password]}
-                        onChange={onChange}
+                        value={formik.values[formSchema.password]}
+                        error={formik.touched[formSchema.password] && Boolean(formik.errors[formSchema.password])}
+                        onChange={formik.handleChange}
                     />
                     <TextField
                         variant="outlined"
@@ -97,8 +109,9 @@ const PasswordReset = () => {
                         id="password_confirmation"
                         autoComplete="current-password"
                         required
-                        value={formState[formSchema.passwordConfirmation]}
-                        onChange={onChange}
+                        value={formik.values[formSchema.passwordConfirmation]}
+                        error={formik.touched[formSchema.passwordConfirmation] && Boolean(formik.errors[formSchema.passwordConfirmation])}
+                        onChange={formik.handleChange}
                     />
                 </>
             )}

@@ -16,11 +16,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/core/TextField */ "./node_modules/@material-ui/core/esm/TextField/index.js");
-/* harmony import */ var _templates_Auth__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../templates/Auth */ "./resources/js/module/admin/templates/Auth/index.js");
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! yup */ "./node_modules/yup/es/index.js");
+/* harmony import */ var _material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/core/TextField */ "./node_modules/@material-ui/core/esm/TextField/index.js");
+/* harmony import */ var _templates_Auth__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../templates/Auth */ "./resources/js/module/admin/templates/Auth/index.js");
+var _yup$object;
 
 
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -38,14 +43,24 @@ function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "und
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
 
 
+
+
+var formSchema = {
+  email: 'email',
+  password: 'password',
+  passwordConfirmation: 'password_confirmation',
+  token: 'token'
+};
+var validationSchema = yup__WEBPACK_IMPORTED_MODULE_4__["object"]((_yup$object = {}, _defineProperty(_yup$object, formSchema.email, yup__WEBPACK_IMPORTED_MODULE_4__["string"]('Enter your email').email('Enter a valid email').required('Email is required')), _defineProperty(_yup$object, formSchema.password, yup__WEBPACK_IMPORTED_MODULE_4__["string"]('Enter your password').required('Password is required')), _defineProperty(_yup$object, formSchema.passwordConfirmation, yup__WEBPACK_IMPORTED_MODULE_4__["string"]().oneOf([yup__WEBPACK_IMPORTED_MODULE_4__["ref"](formSchema.password), null], 'Passwords must match').required()), _yup$object));
 
 var PasswordReset = function PasswordReset() {
-  var _ref3;
+  var _initialValues;
 
   var _useSearchParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["useSearchParams"])(),
       _useSearchParams2 = _slicedToArray(_useSearchParams, 1),
@@ -55,40 +70,28 @@ var PasswordReset = function PasswordReset() {
       token = _useParams.token;
 
   var navigate = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["useNavigate"])();
-  var formSchema = Object(react__WEBPACK_IMPORTED_MODULE_1__["useMemo"])(function () {
-    return {
-      email: 'email',
-      password: 'password',
-      passwordConfirmation: 'password_confirmation',
-      token: 'token'
-    };
-  }, []);
-  var userEmail = searchParams.get(formSchema.email);
   var onSubmit = Object(react__WEBPACK_IMPORTED_MODULE_1__["useCallback"])( /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
-      var formData, resetForm, open, _yield$axios$post, data;
+      var values, open, _yield$axios$post, data;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              formData = _ref.formData, resetForm = _ref.resetForm, open = _ref.open;
-              formData.set(formSchema.token, token);
-              formData.set(formSchema.email, userEmail);
-              _context.next = 5;
-              return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post('/admin/reset-password', formData);
+              values = _ref.values, open = _ref.open;
+              _context.next = 3;
+              return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post('/admin/reset-password', _objectSpread(_objectSpread({}, values), {}, _defineProperty({}, formSchema.token, token)));
 
-            case 5:
+            case 3:
               _yield$axios$post = _context.sent;
               data = _yield$axios$post.data;
-              resetForm();
               open(data.message, {
                 onExited: function onExited() {
                   return navigate('/admin/login');
                 }
               });
 
-            case 9:
+            case 6:
             case "end":
               return _context.stop();
           }
@@ -99,18 +102,19 @@ var PasswordReset = function PasswordReset() {
     return function (_x) {
       return _ref2.apply(this, arguments);
     };
-  }(), [formSchema, token, userEmail, navigate]);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_templates_Auth__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }(), [token, navigate]);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_templates_Auth__WEBPACK_IMPORTED_MODULE_6__["default"], {
     title: "Reset Password",
     actionText: "reset",
-    formProps: {
-      onSubmit: onSubmit
-    },
-    formState: (_ref3 = {}, _defineProperty(_ref3, formSchema.password, ''), _defineProperty(_ref3, formSchema.passwordConfirmation, ''), _ref3)
-  }, function (formState, onChange) {
+    formikConfig: {
+      onSubmit: onSubmit,
+      initialValues: (_initialValues = {}, _defineProperty(_initialValues, formSchema.email, searchParams.get(formSchema.email)), _defineProperty(_initialValues, formSchema.password, ''), _defineProperty(_initialValues, formSchema.passwordConfirmation, ''), _initialValues),
+      validationSchema: validationSchema
+    }
+  }, function (formik) {
     var _React$createElement, _React$createElement2, _React$createElement3;
 
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], (_React$createElement = {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_5__["default"], (_React$createElement = {
       type: "email",
       variant: "outlined",
       margin: "normal",
@@ -121,7 +125,7 @@ var PasswordReset = function PasswordReset() {
       name: formSchema.email,
       autoComplete: "email",
       autoFocus: true
-    }, _defineProperty(_React$createElement, "required", true), _defineProperty(_React$createElement, "disabled", true), _defineProperty(_React$createElement, "defaultValue", userEmail), _React$createElement)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], (_React$createElement2 = {
+    }, _defineProperty(_React$createElement, "required", true), _defineProperty(_React$createElement, "disabled", true), _defineProperty(_React$createElement, "value", formik.values[formSchema.email]), _defineProperty(_React$createElement, "error", formik.touched[formSchema.email] && Boolean(formik.errors[formSchema.email])), _defineProperty(_React$createElement, "onChange", formik.handleChange), _React$createElement)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_5__["default"], (_React$createElement2 = {
       variant: "outlined",
       margin: "normal",
       required: true,
@@ -131,7 +135,7 @@ var PasswordReset = function PasswordReset() {
       type: "password",
       id: "password",
       autoComplete: "current-password"
-    }, _defineProperty(_React$createElement2, "required", true), _defineProperty(_React$createElement2, "value", formState[formSchema.password]), _defineProperty(_React$createElement2, "onChange", onChange), _React$createElement2)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], (_React$createElement3 = {
+    }, _defineProperty(_React$createElement2, "required", true), _defineProperty(_React$createElement2, "value", formik.values[formSchema.password]), _defineProperty(_React$createElement2, "error", formik.touched[formSchema.password] && Boolean(formik.errors[formSchema.password])), _defineProperty(_React$createElement2, "onChange", formik.handleChange), _React$createElement2)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_5__["default"], (_React$createElement3 = {
       variant: "outlined",
       margin: "normal",
       required: true,
@@ -141,7 +145,7 @@ var PasswordReset = function PasswordReset() {
       type: "password",
       id: "password_confirmation",
       autoComplete: "current-password"
-    }, _defineProperty(_React$createElement3, "required", true), _defineProperty(_React$createElement3, "value", formState[formSchema.passwordConfirmation]), _defineProperty(_React$createElement3, "onChange", onChange), _React$createElement3)));
+    }, _defineProperty(_React$createElement3, "required", true), _defineProperty(_React$createElement3, "value", formik.values[formSchema.passwordConfirmation]), _defineProperty(_React$createElement3, "error", formik.touched[formSchema.passwordConfirmation] && Boolean(formik.errors[formSchema.passwordConfirmation])), _defineProperty(_React$createElement3, "onChange", formik.handleChange), _React$createElement3)));
   });
 };
 

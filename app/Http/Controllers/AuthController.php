@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthenticateRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -20,9 +21,17 @@ class AuthController extends Controller
     {
         $this->middleware('guest');
         $this->middleware('throttle:5,1')->only('authenticate');
-        $this->middleware('throttle:1,1')->only('forgot');
     }
 
+    /**
+     * Authenticates user
+     *
+     * @param AuthenticateRequest $request
+     * @return \Illuminate\Http\Response
+     *          |\Illuminate\Contracts\Routing\ResponseFactory
+     *          |\Illuminate\Http\RedirectResponse
+     *          |\Illuminate\Http\JsonResponse
+     */
     public function authenticate(AuthenticateRequest $request)
     {
         $validatedCredentials = $request->validated();
@@ -35,12 +44,23 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->has('remember'))) {
             $request->session()->regenerate();
             // auth()->user();
-            return $request->wantsJson() ? response() : redirect()->intended('dashboard');
+            return $request->wantsJson()
+                ? response()
+                : redirect()->intended('dashboard');
         }
 
-        return $request->wantsJson() ? response()->json(['message' => __('auth.failed')]) : back()->withErrors(['email' => __('auth.failed')]);
+        return $request->wantsJson()
+            ? response()->json(['message' => __('auth.failed')])
+            : back()->withErrors(['email' => __('auth.failed')]);
     }
 
+    /**
+     * Sends password reset link via email
+     *
+     * @param ForgotPasswordRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     *         |\Illuminate\Http\RedirectResponse
+     */
     public function forgot(ForgotPasswordRequest $request)
     {
         $credentials = $request->validated();
@@ -49,12 +69,25 @@ class AuthController extends Controller
 
         $responseData = ['message' => __($status)];
         if ($status === Password::RESET_LINK_SENT) {
-            return $request->wantsJson() ? response()->json($responseData) : back()->with(['status' => __($status)]);
+            return $request->wantsJson()
+                ? response()->json($responseData)
+                : back()->with(['status' => __($status)]);
         }
 
-        return $request->wantsJson() ? response()->json($responseData) : back()->withErrors(['email' => __($status)]);
+        return $request->wantsJson()
+            ? response()->json($responseData)
+            : back()->withErrors(['email' => __($status)]);
     }
 
+    /**
+     * Displays password reset form
+     *
+     * @param Request $request
+     * @param string $passwordResetToken
+     * @return \Illuminate\View\View
+     *         |\Illuminate\Contracts\View\Factory
+     *         |void
+     */
     public function showPasswordReset(Request $request, string $passwordResetToken)
     {
         if (!Arr::exists($request->query(), 'email')) {
@@ -83,9 +116,25 @@ class AuthController extends Controller
         return view('admin');
     }
 
+    /**
+     * Resets user's password
+     *
+     * @param ResetPasswordRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     *         |\Illuminate\Http\RedirectResponse
+     */
     public function reset(ResetPasswordRequest $request)
     {
         $validatedCredentials = $request->validated();
+
+        $user = User::where('email', $validatedCredentials['email'])->first();
+        if (Hash::check($validatedCredentials['password'], $user->password)) {
+            return $request->wantsJson()
+                ? response()->json([
+                    'message' => __('passwords.password_repeat')
+                ])
+                : back()->withErrors(['password' => [__('passwords.password_repeat')]]);
+        }
 
         $status = Password::reset(
             //$request->only('email', 'password', 'password_confirmation', 'token'),
@@ -103,9 +152,13 @@ class AuthController extends Controller
 
         $responseData = ['message' => __($status)];
         if ($status == Password::PASSWORD_RESET) {
-            return $request->wantsJson() ? response()->json($responseData) : redirect()->route('login')->with('status', __($status));
+            return $request->wantsJson()
+                ? response()->json($responseData)
+                : redirect()->route('login')->with('status', __($status));
         }
 
-        return $request->wantsJson() ? response()->json($responseData) : back()->withErrors(['email' => [__($status)]]);
+        return $request->wantsJson()
+            ? response()->json($responseData)
+            : back()->withErrors(['email' => [__($status)]]);
     }
 }
