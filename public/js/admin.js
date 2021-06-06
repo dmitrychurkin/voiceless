@@ -42020,9 +42020,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _atoms_Preloader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./atoms/Preloader */ "./resources/js/module/admin/atoms/Preloader/index.js");
 /* harmony import */ var _theme__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./theme */ "./resources/js/module/admin/theme.js");
 /* harmony import */ var _screens_Login__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./screens/Login */ "./resources/js/module/admin/screens/Login/index.js");
-/* harmony import */ var _screens_Dashboard__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./screens/Dashboard */ "./resources/js/module/admin/screens/Dashboard/index.js");
-/* harmony import */ var _screens_PasswordForgot__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./screens/PasswordForgot */ "./resources/js/module/admin/screens/PasswordForgot/index.js");
-/* harmony import */ var _screens_PasswordReset__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./screens/PasswordReset */ "./resources/js/module/admin/screens/PasswordReset/index.js");
+/* harmony import */ var _screens_PasswordForgot__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./screens/PasswordForgot */ "./resources/js/module/admin/screens/PasswordForgot/index.js");
+/* harmony import */ var _screens_PasswordReset__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./screens/PasswordReset */ "./resources/js/module/admin/screens/PasswordReset/index.js");
+/* harmony import */ var _screens_Dashboard__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./screens/Dashboard */ "./resources/js/module/admin/screens/Dashboard/index.js");
 
 
 
@@ -42046,14 +42046,20 @@ var App = function App() {
     element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_Login__WEBPACK_IMPORTED_MODULE_6__["default"], null)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "forgot-password",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_PasswordForgot__WEBPACK_IMPORTED_MODULE_8__["default"], null)
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_PasswordForgot__WEBPACK_IMPORTED_MODULE_7__["default"], null)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "reset-password/:token",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_PasswordReset__WEBPACK_IMPORTED_MODULE_9__["default"], null)
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_PasswordReset__WEBPACK_IMPORTED_MODULE_8__["default"], null)
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
     path: "dashboard",
-    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_Dashboard__WEBPACK_IMPORTED_MODULE_7__["default"], null)
-  })))));
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_Dashboard__WEBPACK_IMPORTED_MODULE_9__["default"], null)
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    path: "/",
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_Dashboard__WEBPACK_IMPORTED_MODULE_9__["DashboardRoot"], null)
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+    path: "general",
+    element: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_screens_Dashboard__WEBPACK_IMPORTED_MODULE_9__["DashboardGeneral"], null)
+  }))))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (App);
@@ -42131,10 +42137,10 @@ if (root) {
 
 /***/ }),
 
-/***/ "./resources/js/module/admin/screens/Dashboard/index.js":
-/*!**************************************************************!*\
-  !*** ./resources/js/module/admin/screens/Dashboard/index.js ***!
-  \**************************************************************/
+/***/ "./resources/js/module/admin/screens/Dashboard/DashboardGeneral.jsx":
+/*!**************************************************************************!*\
+  !*** ./resources/js/module/admin/screens/Dashboard/DashboardGeneral.jsx ***!
+  \**************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -42143,8 +42149,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
+var DashboardGeneral = function DashboardGeneral() {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "DashboardGeneral");
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(DashboardGeneral));
+
+/***/ }),
+
+/***/ "./resources/js/module/admin/screens/Dashboard/DashboardRoot.jsx":
+/*!***********************************************************************!*\
+  !*** ./resources/js/module/admin/screens/Dashboard/DashboardRoot.jsx ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+
+
+
+var DashboardRoot = function DashboardRoot() {
+  var navigate = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useNavigate"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    navigate('./general', {
+      replace: true
+    });
+  }, [navigate]); // TODO: in future use this route for diagrams
+
+  return null;
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["memo"])(DashboardRoot));
+
+/***/ }),
+
+/***/ "./resources/js/module/admin/screens/Dashboard/index.js":
+/*!**************************************************************!*\
+  !*** ./resources/js/module/admin/screens/Dashboard/index.js ***!
+  \**************************************************************/
+/*! exports provided: DashboardRoot, DashboardGeneral, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _DashboardRoot__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DashboardRoot */ "./resources/js/module/admin/screens/Dashboard/DashboardRoot.jsx");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DashboardRoot", function() { return _DashboardRoot__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+
+/* harmony import */ var _DashboardGeneral__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DashboardGeneral */ "./resources/js/module/admin/screens/Dashboard/DashboardGeneral.jsx");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DashboardGeneral", function() { return _DashboardGeneral__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["lazy"])(function () {
-  return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./Dashboard */ "./resources/js/module/admin/screens/Dashboard/Dashboard.jsx"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(3), __webpack_require__.e(5)]).then(__webpack_require__.bind(null, /*! ./Dashboard */ "./resources/js/module/admin/screens/Dashboard/Dashboard.jsx"));
 }));
 
 /***/ }),
@@ -42162,7 +42227,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["lazy"])(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(2), __webpack_require__.e(1), __webpack_require__.e(4)]).then(__webpack_require__.bind(null, /*! ./Login */ "./resources/js/module/admin/screens/Login/Login.jsx"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4), __webpack_require__.e(2), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ./Login */ "./resources/js/module/admin/screens/Login/Login.jsx"));
 }));
 
 /***/ }),
@@ -42180,7 +42245,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["lazy"])(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5)]).then(__webpack_require__.bind(null, /*! ./PasswordForgot */ "./resources/js/module/admin/screens/PasswordForgot/PasswordForgot.jsx"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(7)]).then(__webpack_require__.bind(null, /*! ./PasswordForgot */ "./resources/js/module/admin/screens/PasswordForgot/PasswordForgot.jsx"));
 }));
 
 /***/ }),
@@ -42198,7 +42263,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["lazy"])(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(6)]).then(__webpack_require__.bind(null, /*! ./PasswordReset */ "./resources/js/module/admin/screens/PasswordReset/PasswordReset.jsx"));
+  return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(2), __webpack_require__.e(8)]).then(__webpack_require__.bind(null, /*! ./PasswordReset */ "./resources/js/module/admin/screens/PasswordReset/PasswordReset.jsx"));
 }));
 
 /***/ }),

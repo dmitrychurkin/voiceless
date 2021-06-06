@@ -1,8 +1,12 @@
 import React, { memo } from 'react';
+import { Outlet } from 'react-router';
+import DashboardTemplate from '../../templates/Dashboard';
 
 const Dashboard = () => {
     return (
-        <div>Dashboard</div>
+        <DashboardTemplate>
+            <Outlet />
+        </DashboardTemplate>
     );
 };
 

@@ -45,7 +45,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             // auth()->user();
             return $request->wantsJson()
-                ? response()
+                ? response(null)
                 : redirect()->intended('dashboard');
         }
 

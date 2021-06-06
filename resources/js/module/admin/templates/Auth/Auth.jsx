@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import useStyles from './style';
+import Copyright from '../../atoms/Copyright';
 import Snackbar from '../../atoms/Snackbar';
 import useSnackbar from '../../hooks/useSnackbar';
 
@@ -89,14 +90,7 @@ const Auth = ({
                                 </Grid>
                             </Grid>
                             <Box mt={5}>
-                                <Typography variant="body2" color="textSecondary" align="center">
-                                    {'Copyright © '}
-                                    <Link color="inherit" href="/">
-                                        Voiceless
-                                    </Link>{' '}
-                                    {new Date().getFullYear()}
-                                    {'.'}
-                                </Typography>
+                                <Copyright />
                             </Box>
                         </form>
                     </div>
