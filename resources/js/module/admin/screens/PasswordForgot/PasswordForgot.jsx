@@ -1,9 +1,9 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Auth from '../../templates/Auth';
+import useRequests from '../../hooks/useRequests';
 
 const formSchema = {
     email: 'email'
@@ -18,17 +18,20 @@ const validationSchema = yup.object({
 
 const PasswordForgot = () => {
     const navigate = useNavigate();
+    const { forgotPassword } = useRequests();
 
     const onSubmit = useCallback(async ({
         values,
         open
     }) => {
-        const { data } = await axios.post('/admin/forgot-password', values);
+        const { data } = await forgotPassword({
+            data: values
+        });
 
         open(data.message, {
             onExited: () => navigate('/admin/login')
         });
-    }, [navigate]);
+    }, [forgotPassword, navigate]);
 
     return (
         <Auth

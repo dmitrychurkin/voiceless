@@ -1,10 +1,10 @@
-import React, { memo, useCallback, useMemo } from 'react';
-import axios from 'axios';
+import React, { memo, useCallback } from 'react';
 import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Auth from '../../templates/Auth';
+import useRequests from '../../hooks/useRequests';
 
 const formSchema = {
     email: 'email',
@@ -26,13 +26,16 @@ const validationSchema = yup.object({
 });
 
 const Login = () => {
+    const { login } = useRequests();
     const onSubmit = useCallback(async ({
         values,
         open
     }) => {
-        const { data } = await axios.post('/admin/login', {
-            ...values,
-            [formSchema.remember]: values[formSchema.remember] || undefined
+        const { data } = await login({
+            data: {
+                ...values,
+                [formSchema.remember]: values[formSchema.remember] || undefined
+            }
         });
 
         if (!data) {
@@ -40,7 +43,7 @@ const Login = () => {
         }
 
         open(data.message);
-    }, []);
+    }, [login]);
 
     return (
         <Auth

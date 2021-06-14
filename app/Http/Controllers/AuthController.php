@@ -19,8 +19,9 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest')->except('logout');
         $this->middleware('throttle:5,1')->only('authenticate');
+        $this->middleware('auth:sanctum')->only('logout');
     }
 
     /**
@@ -52,6 +53,27 @@ class AuthController extends Controller
         return $request->wantsJson()
             ? response()->json(['message' => __('auth.failed')])
             : back()->withErrors(['email' => __('auth.failed')]);
+    }
+
+    /**
+     * Logout user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     *         |\Illuminate\Contracts\Routing\ResponseFactory
+     *         |\Illuminate\Http\Redirect
+     */
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return $request->wantsJson()
+            ? response(null)
+            : redirect()->route('dashboard.root');
     }
 
     /**

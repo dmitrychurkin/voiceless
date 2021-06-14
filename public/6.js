@@ -13,13 +13,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! yup */ "./node_modules/yup/es/index.js");
-/* harmony import */ var _material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/core/TextField */ "./node_modules/@material-ui/core/esm/TextField/index.js");
-/* harmony import */ var _material_ui_core_FormControlLabel__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/core/FormControlLabel */ "./node_modules/@material-ui/core/esm/FormControlLabel/index.js");
-/* harmony import */ var _material_ui_core_Checkbox__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/Checkbox */ "./node_modules/@material-ui/core/esm/Checkbox/index.js");
-/* harmony import */ var _templates_Auth__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../templates/Auth */ "./resources/js/module/admin/templates/Auth/index.js");
+/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! yup */ "./node_modules/yup/es/index.js");
+/* harmony import */ var _material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @material-ui/core/TextField */ "./node_modules/@material-ui/core/esm/TextField/index.js");
+/* harmony import */ var _material_ui_core_FormControlLabel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/core/FormControlLabel */ "./node_modules/@material-ui/core/esm/FormControlLabel/index.js");
+/* harmony import */ var _material_ui_core_Checkbox__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/core/Checkbox */ "./node_modules/@material-ui/core/esm/Checkbox/index.js");
+/* harmony import */ var _templates_Auth__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../templates/Auth */ "./resources/js/module/admin/templates/Auth/index.js");
+/* harmony import */ var _hooks_useRequests__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../hooks/useRequests */ "./resources/js/module/admin/hooks/useRequests.js");
 var _yup$object;
 
 
@@ -46,14 +45,17 @@ var formSchema = {
   password: 'password',
   remember: 'remember'
 };
-var validationSchema = yup__WEBPACK_IMPORTED_MODULE_3__["object"]((_yup$object = {}, _defineProperty(_yup$object, formSchema.email, yup__WEBPACK_IMPORTED_MODULE_3__["string"]('Enter your email').email('Enter a valid email').required('Email is required')), _defineProperty(_yup$object, formSchema.password, yup__WEBPACK_IMPORTED_MODULE_3__["string"]('Enter your password').required('Password is required')), _defineProperty(_yup$object, formSchema.remember, yup__WEBPACK_IMPORTED_MODULE_3__["boolean"]().optional()), _yup$object));
+var validationSchema = yup__WEBPACK_IMPORTED_MODULE_2__["object"]((_yup$object = {}, _defineProperty(_yup$object, formSchema.email, yup__WEBPACK_IMPORTED_MODULE_2__["string"]('Enter your email').email('Enter a valid email').required('Email is required')), _defineProperty(_yup$object, formSchema.password, yup__WEBPACK_IMPORTED_MODULE_2__["string"]('Enter your password').required('Password is required')), _defineProperty(_yup$object, formSchema.remember, yup__WEBPACK_IMPORTED_MODULE_2__["boolean"]().optional()), _yup$object));
 
 var Login = function Login() {
   var _initialValues;
 
+  var _useRequests = Object(_hooks_useRequests__WEBPACK_IMPORTED_MODULE_7__["default"])(),
+      login = _useRequests.login;
+
   var onSubmit = Object(react__WEBPACK_IMPORTED_MODULE_1__["useCallback"])( /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(_ref) {
-      var values, open, _yield$axios$post, data;
+      var values, open, _yield$login, data;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
@@ -61,11 +63,13 @@ var Login = function Login() {
             case 0:
               values = _ref.values, open = _ref.open;
               _context.next = 3;
-              return axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/admin/login', _objectSpread(_objectSpread({}, values), {}, _defineProperty({}, formSchema.remember, values[formSchema.remember] || undefined)));
+              return login({
+                data: _objectSpread(_objectSpread({}, values), {}, _defineProperty({}, formSchema.remember, values[formSchema.remember] || undefined))
+              });
 
             case 3:
-              _yield$axios$post = _context.sent;
-              data = _yield$axios$post.data;
+              _yield$login = _context.sent;
+              data = _yield$login.data;
 
               if (!data) {
                 window.location.reload();
@@ -84,8 +88,8 @@ var Login = function Login() {
     return function (_x) {
       return _ref2.apply(this, arguments);
     };
-  }(), []);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_templates_Auth__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }(), [login]);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_templates_Auth__WEBPACK_IMPORTED_MODULE_6__["default"], {
     title: "Sign in",
     actionText: "sign in",
     linkProps: {
@@ -100,7 +104,7 @@ var Login = function Login() {
   }, function (formik) {
     var _React$createElement, _React$createElement2;
 
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], (_React$createElement = {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__["default"], (_React$createElement = {
       type: "email",
       variant: "outlined",
       margin: "normal",
@@ -111,7 +115,7 @@ var Login = function Login() {
       name: formSchema.email,
       autoComplete: "email",
       autoFocus: true
-    }, _defineProperty(_React$createElement, "required", true), _defineProperty(_React$createElement, "value", formik.values[formSchema.email]), _defineProperty(_React$createElement, "error", formik.touched[formSchema.email] && Boolean(formik.errors[formSchema.email])), _defineProperty(_React$createElement, "onChange", formik.handleChange), _React$createElement)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], (_React$createElement2 = {
+    }, _defineProperty(_React$createElement, "required", true), _defineProperty(_React$createElement, "value", formik.values[formSchema.email]), _defineProperty(_React$createElement, "error", formik.touched[formSchema.email] && Boolean(formik.errors[formSchema.email])), _defineProperty(_React$createElement, "onChange", formik.handleChange), _React$createElement)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_3__["default"], (_React$createElement2 = {
       variant: "outlined",
       margin: "normal",
       required: true,
@@ -121,8 +125,8 @@ var Login = function Login() {
       type: "password",
       id: "password",
       autoComplete: "current-password"
-    }, _defineProperty(_React$createElement2, "required", true), _defineProperty(_React$createElement2, "value", formik.values[formSchema.password]), _defineProperty(_React$createElement2, "error", formik.touched[formSchema.password] && Boolean(formik.errors[formSchema.password])), _defineProperty(_React$createElement2, "onChange", formik.handleChange), _React$createElement2)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_FormControlLabel__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      control: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Checkbox__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    }, _defineProperty(_React$createElement2, "required", true), _defineProperty(_React$createElement2, "value", formik.values[formSchema.password]), _defineProperty(_React$createElement2, "error", formik.touched[formSchema.password] && Boolean(formik.errors[formSchema.password])), _defineProperty(_React$createElement2, "onChange", formik.handleChange), _React$createElement2)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_FormControlLabel__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      control: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_material_ui_core_Checkbox__WEBPACK_IMPORTED_MODULE_5__["default"], {
         value: "remember",
         color: "primary",
         name: formSchema.remember,

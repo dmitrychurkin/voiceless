@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Routes } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Preloader from './atoms/Preloader';
@@ -8,22 +8,29 @@ import Login from './screens/Login';
 import PasswordForgot from './screens/PasswordForgot';
 import PasswordReset from './screens/PasswordReset';
 import Dashboard, { DashboardRoot, DashboardGeneral } from './screens/Dashboard';
+import ApiProvider from './providers/ApiProvider';
+import AuthProvider from './providers/AuthProvider';
+import Route from './molecules/Route';
 
 const App = () => (
   <BrowserRouter>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Suspense fallback={<Preloader />}>
-        <Routes basename='/admin'>
-          <Route path='login' element={<Login />} />
-          <Route path='forgot-password' element={<PasswordForgot />} />
-          <Route path='reset-password/:token' element={<PasswordReset />} />
-          <Route path='dashboard' element={<Dashboard />}>
-            <Route path='/' element={<DashboardRoot />} />
-            <Route path='general' element={<DashboardGeneral />} />
-          </Route>
-        </Routes>
-      </Suspense>
+      <ApiProvider>
+        <AuthProvider>
+          <Suspense fallback={<Preloader />}>
+            <Routes basename='/admin'>
+              <Route redirectIfAuthenticated path='login' element={<Login />} />
+              <Route redirectIfAuthenticated path='forgot-password' element={<PasswordForgot />} />
+              <Route redirectIfAuthenticated path='reset-password/:token' element={<PasswordReset />} />
+              <Route isPrivate path='dashboard' element={<Dashboard />}>
+                <Route path='/' element={<DashboardRoot />} />
+                <Route path='general' element={<DashboardGeneral />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </AuthProvider>
+      </ApiProvider>
     </ThemeProvider>
   </BrowserRouter>
 );

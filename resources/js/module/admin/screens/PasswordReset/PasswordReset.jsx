@@ -1,9 +1,9 @@
 import React, { memo, useCallback } from 'react';
 import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
-import axios from 'axios';
 import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Auth from '../../templates/Auth';
+import useRequests from '../../hooks/useRequests';
 
 const formSchema = {
     email: 'email',
@@ -27,6 +27,8 @@ const validationSchema = yup.object({
 });
 
 const PasswordReset = () => {
+    const { resetPassword } = useRequests();
+
     const [searchParams] = useSearchParams();
 
     const { token } = useParams();
@@ -37,15 +39,18 @@ const PasswordReset = () => {
         values,
         open
     }) => {
-        const { data } = await axios.post('/admin/reset-password', {
-            ...values,
-            [formSchema.token]: token
+        const { data } = await resetPassword({
+            data: {
+                ...values,
+                [formSchema.token]: token
+            }
         });
 
         open(data.message, {
             onExited: () => navigate('/admin/login')
         });
     }, [
+        resetPassword,
         token,
         navigate
     ]);

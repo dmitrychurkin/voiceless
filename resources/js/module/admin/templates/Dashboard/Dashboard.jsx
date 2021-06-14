@@ -8,18 +8,38 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import useStyles from './style';
 import Copyright from '../../atoms/Copyright';
+import useRequests from '../../hooks/useRequests';
 
 const Dashboard = ({ children, mainListItems, secondaryListItems }) => {
     const classes = useStyles();
     const [open, setOpen] = useState(true);
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const { logout } = useRequests();
+
+    const isMenuOpen = Boolean(anchorEl);
+
+    const handleMenuClose = useCallback(() => {
+        setAnchorEl(null);
+    }, []);
+
+    const withMenuClose = useCallback(fn => (...args) => {
+        handleMenuClose();
+        fn(...args);
+    }, [handleMenuClose]);
+
+    const handleProfileMenuOpen = useCallback((event) => {
+        setAnchorEl(event.currentTarget);
+    }, []);
 
     const handleDrawerOpen = useCallback(() => {
         setOpen(true);
@@ -28,6 +48,26 @@ const Dashboard = ({ children, mainListItems, secondaryListItems }) => {
     const handleDrawerClose = useCallback(() => {
         setOpen(false);
     }, []);
+
+    const handleLogout = withMenuClose(async () => {
+        await logout();
+        window.location.reload();
+    });
+
+    const menuId = 'primary-account-menu';
+    const renderMenu = (
+        <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+        >
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </Menu>
+    );
 
     return (
         <div className={classes.root}>
@@ -45,13 +85,21 @@ const Dashboard = ({ children, mainListItems, secondaryListItems }) => {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         Dashboard
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
+                    <div className={classes.sectionDesktop}>
+                        <IconButton
+                            edge="end"
+                            aria-label="account of current user"
+                            aria-controls={menuId}
+                            aria-haspopup="true"
+                            onClick={handleProfileMenuOpen}
+                            color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                    </div>
                 </Toolbar>
             </AppBar>
+            {renderMenu}
             <Drawer
                 variant="permanent"
                 classes={{

@@ -25,6 +25,7 @@ Route::prefix('admin')->group(function () {
     // Login routes
     Route::view('login', 'admin')->middleware('guest')->name('login');
     Route::post('login', [AuthController::class, 'authenticate'])->name('signin');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
     // Password reset routes
     Route::view('forgot-password', 'admin')->middleware('guest')->name('password.request');
