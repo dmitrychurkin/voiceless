@@ -10,6 +10,7 @@ import PasswordReset from './screens/PasswordReset';
 import Dashboard, { DashboardRoot, DashboardGeneral } from './screens/Dashboard';
 import ApiProvider from './providers/ApiProvider';
 import AuthProvider from './providers/AuthProvider';
+import StoreProvider from './providers/StoreProvider';
 import Route from './molecules/Route';
 
 const App = () => (
@@ -18,17 +19,19 @@ const App = () => (
       <CssBaseline />
       <ApiProvider>
         <AuthProvider>
-          <Suspense fallback={<Preloader />}>
-            <Routes basename='/admin'>
-              <Route redirectIfAuthenticated path='login' element={<Login />} />
-              <Route redirectIfAuthenticated path='forgot-password' element={<PasswordForgot />} />
-              <Route redirectIfAuthenticated path='reset-password/:token' element={<PasswordReset />} />
-              <Route isPrivate path='dashboard' element={<Dashboard />}>
-                <Route path='/' element={<DashboardRoot />} />
-                <Route path='general' element={<DashboardGeneral />} />
-              </Route>
-            </Routes>
-          </Suspense>
+          <StoreProvider>
+            <Suspense fallback={<Preloader />}>
+              <Routes basename='/admin'>
+                <Route redirectIfAuthenticated path='login' element={<Login />} />
+                <Route redirectIfAuthenticated path='forgot-password' element={<PasswordForgot />} />
+                <Route redirectIfAuthenticated path='reset-password/:token' element={<PasswordReset />} />
+                <Route isPrivate path='dashboard' element={<Dashboard />}>
+                  <Route path='/' element={<DashboardRoot />} />
+                  <Route path='general' element={<DashboardGeneral />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </StoreProvider>
         </AuthProvider>
       </ApiProvider>
     </ThemeProvider>

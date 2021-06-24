@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
         const authInterceptor = api.interceptors.response.use(
             response => response,
             error => {
-                if ([401].includes(error.status)) {
+                if ([401, 419].includes(error.status)) {
                     setUserState(null);
                 }
                 return Promise.reject(error);

@@ -15,8 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return new UserResource($request->user());
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return new UserResource($request->user());
+    });
+
+    Route::apiResource('settings', SettingsController::class);
+    Route::apiResource('settings.social-links', SocialLinkController::class)->shallow();
+    Route::apiResource('settings.contact-details', ContactDetailController::class)->shallow();
 });
 
 Route::post('/contacts', ContactFormController::class);
