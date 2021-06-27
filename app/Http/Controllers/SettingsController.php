@@ -16,8 +16,7 @@ class SettingsController extends Controller
     public function index()
     {
         $settings = Settings::firstOrCreate(
-            ['id' => 1],
-            ['about' => '']
+            ['id' => 1]
         );
 
         return new SettingsResource($settings);

@@ -37,12 +37,23 @@ const useRequests = () => {
         // Contact Details
         updateContactDetail: useCallback((
             { method = 'patch', url = '/api/contact-details', data, ...rest } = {}
-        ) => api({ method, url: `${url}/${data.id}`, data, ...rest }), [api]),
+        ) => api({ method, url: `${url}/${data.id}`, data: { ...data, id: undefined }, ...rest }), [api]),
         createContactDetail: useCallback((
-            { method = 'post', url = '/api/settings/1/contact-details', ...rest } = {}
+            { method = 'post', url = '/api/contact-details', ...rest } = {}
         ) => api({ method, url, ...rest }), [api]),
         deleteContactDetail: useCallback((
             { method = 'delete', url = '/api/contact-details', data, ...rest } = {}
+        ) => api({ method, url: `${url}/${data.id}`, ...rest }), [api]),
+
+        // Social Links
+        updateSocialLink: useCallback((
+            { method = 'patch', url = '/api/social-links', data, ...rest } = {}
+        ) => api({ method, url: `${url}/${data.id}`, data: { ...data, id: undefined }, ...rest }), [api]),
+        createSocialLink: useCallback((
+            { method = 'post', url = '/api/social-links', ...rest } = {}
+        ) => api({ method, url, ...rest }), [api]),
+        deleteSocialLink: useCallback((
+            { method = 'delete', url = '/api/social-links', data, ...rest } = {}
         ) => api({ method, url: `${url}/${data.id}`, ...rest }), [api])
     };
 };

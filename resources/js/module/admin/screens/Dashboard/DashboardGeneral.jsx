@@ -1,413 +1,160 @@
-import React, { memo, useState, useCallback, useEffect, useRef, forwardRef } from 'react';
-import { Formik, Form, Field, FieldArray } from 'formik';
-import { isEqual } from 'lodash';
-import * as Yup from 'yup';
-import { Grid } from '@material-ui/core';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Button from '@material-ui/core/Button';
+import React, { memo, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import useGeneralActions from '../../hooks/useGeneralActions';
 import useStore from '../../hooks/useStore';
 import Contact from '../../entities/Contact';
-import Preloader from '../../atoms/Preloader';
-
-const RANGES = {
-    contactDetails: {
-        phone: {
-            MAX: 20
-        },
-        email: {
-            MAX: 255
-        },
-        address: {
-            MAX: 200
-        },
-        contactPerson: {
-            MAX: 100
-        },
-        MAX: 10
-    },
-};
-
-Yup.addMethod(Yup.array, 'unique', function (message, mapper = a => a) {
-    return this.test('unique', message, list => list.length === new Set(list.map(mapper)).size);
-});
-
-const contactDetailsValidationSchema = Yup.object().shape({
-    contactDetails: Yup.array()
-        .of(
-            Yup.object().shape({
-                phone: Yup.string()
-                    .required('Phone number is required')
-                    .matches(
-                        /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/,
-                        'Phone number is not valid'
-                    )
-                    .max(RANGES.contactDetails.phone.MAX, `Phone should be lees then ${RANGES.contactDetails.phone.MAX} characters`),
-                email: Yup.string()
-                    .email('Email is not valid')
-                    .required('Email is required')
-                    .max(RANGES.contactDetails.email.MAX, `Email should be lees then ${RANGES.contactDetails.email.MAX} characters`),
-                address: Yup.string()
-                    .required('Address is required')
-                    .max(RANGES.contactDetails.address.MAX, `Address should be lees then ${RANGES.contactDetails.address.MAX} characters`),
-                contactPerson: Yup.string()
-                    .required('Contact person full name is required')
-                    .max(RANGES.contactDetails.contactPerson.MAX, `Contact person full name should be lees then ${RANGES.contactDetails.contactPerson.MAX} characters`)
-            })
-        )
-        .unique('Duplicate email is not allowed', a => a.email)
-        .max(RANGES.contactDetails.MAX, `Maximum of ${RANGES.contactDetails.MAX} contacts`)
-});
-
-const Transition = forwardRef((props, ref) => (
-    <Slide direction="up" ref={ref} {...props} />
-));
+import SocialLink from '../../entities/SocialLink';
+import TabEntity from '../../templates/TabEntity';
+import { contactDetailsValidationSchema, RANGES as contactDetailRanges } from '../../validators/contactDetail';
+import { socialLinksValidationSchema, RANGES as socialLinksRanges } from '../../validators/socialLink';
 
 const DashboardGeneral = () => {
-    const formikFieldArrayHelpersRef = useRef();
     const { state: { general } } = useStore();
-    const { fetchGeneralSettings, createContactDetail, updateContactDetail, deleteContactDetail } = useGeneralActions();
-
-    const [tabState, setTabState] = useState(0);
-    const [promptState, setPromptState] = useState(null);
-
-    const handleClose = useCallback(() => {
-        setPromptState(null);
-    }, []);
-
-    const handleOk = useCallback(() => {
-        setPromptState(({ handler }) => {
-            handler();
-            return null;
-        });
-    }, []);
-
-    const onTabChange = useCallback((_, value) => {
-        setTabState(value);
-    }, []);
-
-    const a11yProps = useCallback(index => ({
-        id: `contact-tab-${index}`,
-        'aria-controls': `contact-tabpanel-${index}`
-    }), []);
-
-    const onAdd = useCallback((fieldArrayHelpers, Model) => () => {
-        const { length } = fieldArrayHelpers.form.values.contactDetails;
-        if (length < RANGES.contactDetails.MAX) {
-            fieldArrayHelpers.push(new Model);
-            setTabState(length);
-        }
-    }, []);
-
-    const handleRemove = useCallback((fieldArrayHelpers, index) => {
-        fieldArrayHelpers.remove(index);
-    }, []);
-
-    const onDelete = useCallback((collection, fieldArrayHelpers, tabState) => () => {
-        const resetTab = () => setTabState(state => state > 0 ? state - 1 : state);
-        const data = collection[tabState];
-        if (data) {
-            setPromptState({
-                data,
-                handler: () => deleteContactDetail({ data })
-                    .then(() => {
-                        handleRemove(fieldArrayHelpers, tabState);
-                        resetTab();
-                    })
-                    .catch(console.error)
-            });
-            return;
-        }
-        handleRemove(fieldArrayHelpers, tabState);
-        resetTab();
-    }, [handleRemove, deleteContactDetail]);
-
-    const onSubmitContactDetailForm = useCallback(async values => {
-        const aggregatedHandlers = values.contactDetails.reduce((totalAggregated, contactDetail) => {
-            // New item been added
-            if (!('id' in contactDetail)) {
-                return [
-                    ...totalAggregated,
-                    {
-                        args: {
-                            data: contactDetail
-                        },
-                        handler: createContactDetail
-                    }
-                ];
-            }
-
-            const data = Object.entries(
-                general.contactDetails
-                    .find(generalContactDetail => generalContactDetail.id === contactDetail.id) ?? {}
-            ).reduce((acc, [key, value]) => {
-                const contactDetailValue = contactDetail[key];
-                if (!isEqual(value, contactDetailValue)) {
-                    return {
-                        ...acc,
-                        [key]: contactDetailValue
-                    };
-                }
-                return acc;
-            }, {});
-
-            // Update existing item
-            if (Object.entries(data).length > 0) {
-                return [
-                    ...totalAggregated,
-                    {
-                        args: {
-                            data: {
-                                ...data,
-                                id: contactDetail.id
-                            }
-                        },
-                        handler: updateContactDetail
-                    }
-                ];
-            }
-
-            return totalAggregated;
-        }, []);
-
-        if (aggregatedHandlers.length > 0) {
-            try {
-                const responses = await Promise.allSettled(
-                    aggregatedHandlers.map(({ handler, args }) => handler(args))
-                );
-
-                for await (const { value: responseData } of responses) {
-                    if (responseData) {
-                        const responseDataCompadrable = { ...responseData };
-                        delete responseDataCompadrable.id;
-                        const index = values.contactDetails.findIndex(contactDetail => isEqual({ ...contactDetail }, { ...responseDataCompadrable }));
-
-                        if (~index) {
-                            formikFieldArrayHelpersRef.current.replace(index, responseData);
-                        }
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-    }, [general.contactDetails, createContactDetail]);
+    const {
+        fetchGeneralSettings,
+        createContactDetail, updateContactDetail, deleteContactDetail,
+        createSocialLink, updateSocialLink, deleteSocialLink
+    } = useGeneralActions();
 
     useEffect(() => {
         if (!general.isVisited) {
-            fetchGeneralSettings();
+            fetchGeneralSettings()
+                .catch(({ response }) => console.error(response.data));
         }
     }, [fetchGeneralSettings, general.isVisited]);
 
     return (
         <>
-            <Grid item xs={12}>
-                <Card>
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            component="h2"
-                            color="textSecondary"
-                            gutterBottom
-                        >
-                            Contacts
-                        </Typography>
-                        {general.isLoading ? (
-                            <Preloader height='auto' />
-                        ) : (
-                            <Formik
-                                initialValues={{ contactDetails: general.contactDetails }}
-                                validationSchema={contactDetailsValidationSchema}
-                                onSubmit={onSubmitContactDetailForm}
-                            >
-                                {({ values, isSubmitting, isValid }) => (
-                                    <Form>
-                                        <FieldArray
-                                            name='contactDetails'
-                                            render={arrayHelpers => {
-                                                formikFieldArrayHelpersRef.current = arrayHelpers;
-
-                                                return (
-                                                    <>
-                                                        {values.contactDetails.length > 0 ? (
-                                                            <>
-                                                                <Tabs
-                                                                    value={tabState}
-                                                                    onChange={onTabChange}
-                                                                    variant='scrollable'
-                                                                    scrollButtons='auto'
-                                                                    aria-label="contact tabs"
-                                                                >
-                                                                    {values.contactDetails.map((contact, index) => (
-                                                                        <Tab key={index} label={contact.contactPerson || `Contact person ${index + 1} full name`} {...a11yProps(0)} />
-                                                                    ))}
-                                                                </Tabs>
-                                                                {values.contactDetails.map((_, index) => (
-                                                                    <div
-                                                                        key={index}
-                                                                        role="tabpanel"
-                                                                        hidden={tabState !== index}
-                                                                        id={`wrapped-tabpanel-${index}`}
-                                                                        aria-labelledby={`wrapped-tab-${index}`}
-                                                                    >
-                                                                        <Field name={`contactDetails[${index}].phone`}>
-                                                                            {({ field, meta }) => (
-                                                                                <Box
-                                                                                    display='flex'
-                                                                                    flexDirection='column'
-                                                                                    pt={5}
-                                                                                >
-                                                                                    <TextField
-                                                                                        {...field}
-                                                                                        id={`phone-${index}`}
-                                                                                        type='tel'
-                                                                                        label='Phone*'
-                                                                                        variant='outlined'
-                                                                                        error={Boolean(meta.error)}
-                                                                                        helperText={meta.error}
-                                                                                    />
-                                                                                </Box>
-                                                                            )}
-                                                                        </Field>
-                                                                        <Field name={`contactDetails[${index}].email`}>
-                                                                            {({ field, meta }) => (
-                                                                                <Box
-                                                                                    display='flex'
-                                                                                    flexDirection='column'
-                                                                                    pt={3}
-                                                                                >
-                                                                                    <TextField
-                                                                                        {...field}
-                                                                                        id={`email-${index}`}
-                                                                                        type='email'
-                                                                                        label='Email*'
-                                                                                        variant='outlined'
-                                                                                        error={Boolean(meta.error)}
-                                                                                        helperText={meta.error}
-                                                                                    />
-                                                                                </Box>
-                                                                            )}
-                                                                        </Field>
-                                                                        <Field name={`contactDetails[${index}].address`}>
-                                                                            {({ field, meta }) => (
-                                                                                <Box
-                                                                                    display='flex'
-                                                                                    flexDirection='column'
-                                                                                    pt={3}
-                                                                                >
-                                                                                    <TextField
-                                                                                        {...field}
-                                                                                        id={`address-${index}`}
-                                                                                        label='Address*'
-                                                                                        variant='outlined'
-                                                                                        error={Boolean(meta.error)}
-                                                                                        helperText={meta.error}
-                                                                                    />
-                                                                                </Box>
-                                                                            )}
-                                                                        </Field>
-                                                                        <Field name={`contactDetails[${index}].contactPerson`}>
-                                                                            {({ field, meta }) => (
-                                                                                <Box
-                                                                                    display='flex'
-                                                                                    flexDirection='column'
-                                                                                    pt={3}
-                                                                                    pb={5}
-                                                                                >
-                                                                                    <TextField
-                                                                                        {...field}
-                                                                                        id={`contactPerson-${index}`}
-                                                                                        label='Contact person*'
-                                                                                        variant='outlined'
-                                                                                        error={Boolean(meta.error)}
-                                                                                        helperText={meta.error}
-                                                                                    />
-                                                                                </Box>
-                                                                            )}
-                                                                        </Field>
-                                                                    </div>
-                                                                ))}
-                                                            </>
-                                                        ) : (
-                                                            <Typography
-                                                                variant="h6"
-                                                                gutterBottom
-                                                            >
-                                                                No any contacts yet...
-                                                            </Typography>
-                                                        )}
-                                                        <CardActions>
-                                                            {values.contactDetails.length > 0 && (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    size='small'
-                                                                    color='secondary'
-                                                                    onClick={onDelete(general.contactDetails, arrayHelpers, tabState)}
-                                                                >
-                                                                    Delete
-                                                                </Button>
-                                                            )}
-                                                            {values.contactDetails.length < RANGES.contactDetails.MAX && (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    size='small'
-                                                                    color='primary'
-                                                                    onClick={onAdd(arrayHelpers, Contact)}
-                                                                >
-                                                                    Add
-                                                                </Button>
-                                                            )}
-                                                            {isValid && !isEqual(general.contactDetails, values.contactDetails) && (
-                                                                <Button
-                                                                    variant='outlined'
-                                                                    size='small'
-                                                                    type='submit'
-                                                                    disabled={isSubmitting}
-                                                                >
-                                                                    Save
-                                                                </Button>
-                                                            )}
-                                                        </CardActions>
-                                                    </>
-                                                );
-                                            }}
-                                        />
-                                    </Form>
-                                )}
-                            </Formik>
-                        )}
-                    </CardContent>
-                </Card>
-            </Grid>
-            <Dialog
-                open={Boolean(promptState)}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <DialogTitle id="alert-dialog-slide-title">{`Are you sure you want to delete ${promptState?.data.contactPerson}?`}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        cancel
-                    </Button>
-                    <Button onClick={handleOk} color="secondary">
-                        ok
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <TabEntity
+                isLoading={general.isLoading}
+                title='Contacts'
+                name='contactDetails'
+                tabLabelFn={(contact, index) => contact.contactPerson || `Contact person ${index + 1} full name`}
+                collection={general.contactDetails}
+                model={Contact}
+                maxTabs={contactDetailRanges.contactDetails.MAX}
+                fields={[
+                    {
+                        name: 'phone',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`phone-${index}`}
+                                type='tel'
+                                label='Phone*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    },
+                    {
+                        name: 'email',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`email-${index}`}
+                                type='email'
+                                label='Email*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    },
+                    {
+                        name: 'address',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`address-${index}`}
+                                label='Address*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    },
+                    {
+                        name: 'contactPerson',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`contactPerson-${index}`}
+                                label='Contact person*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    }
+                ]}
+                actions={{
+                    create: createContactDetail,
+                    update: updateContactDetail,
+                    delete: deleteContactDetail
+                }}
+                dialogProps={{
+                    alertTitleFn: promptState => `Are you sure you want to delete ${promptState?.data.contactPerson}?`
+                }}
+                formikProps={{
+                    initialValues: { contactDetails: general.contactDetails },
+                    validationSchema: contactDetailsValidationSchema
+                }}
+            />
+            <TabEntity
+                isLoading={general.isLoading}
+                title='Social Links'
+                name='socialLinks'
+                tabLabelFn={(socialLink, index) => socialLink.name || `Social link ${index + 1}`}
+                collection={general.socialLinks}
+                model={SocialLink}
+                maxTabs={socialLinksRanges.socialLinks.MAX}
+                fields={[
+                    {
+                        name: 'name',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`socialLinkName-${index}`}
+                                label='Social link name*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    },
+                    {
+                        name: 'url',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`socialLinkUrl-${index}`}
+                                label='Social link URL*'
+                                variant='outlined'
+                                InputProps={{
+                                    startAdornment: <InputAdornment position="start">https://</InputAdornment>,
+                                }}
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    }
+                ]}
+                actions={{
+                    create: createSocialLink,
+                    update: updateSocialLink,
+                    delete: deleteSocialLink
+                }}
+                dialogProps={{
+                    alertTitleFn: promptState => `Are you sure you want to delete ${promptState?.data.name}?`
+                }}
+                formikProps={{
+                    initialValues: { socialLinks: general.socialLinks },
+                    validationSchema: socialLinksValidationSchema
+                }}
+            />
         </>
     );
 };

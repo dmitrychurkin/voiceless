@@ -14,10 +14,19 @@ class SocialLink extends Model
     protected $fillable = ['name', 'url'];
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'settings_id' => 1
+    ];
+
+    /**
      * Get settings
      */
     public function settings()
     {
-        return $this->belongsTo(Settings::class);
+        return $this->belongsTo(Settings::class, 'settings_id');
     }
 }

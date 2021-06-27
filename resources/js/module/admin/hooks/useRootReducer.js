@@ -9,10 +9,8 @@ export const initialState = {
     general: {
         isLoading: false,
         isVisited: false,
-        about: '',
         contactDetails: [],
-        socialLinks: [],
-        error: null
+        socialLinks: []
     }
 };
 

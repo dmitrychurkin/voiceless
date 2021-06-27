@@ -20,9 +20,11 @@ Route::middleware('auth:sanctum')->group(function () {
         return new UserResource($request->user());
     });
 
-    Route::apiResource('settings', SettingsController::class);
-    Route::apiResource('settings.social-links', SocialLinkController::class)->shallow();
-    Route::apiResource('settings.contact-details', ContactDetailController::class)->shallow();
+    Route::apiResources([
+        'settings' => SettingsController::class,
+        'contact-details' => ContactDetailController::class,
+        'social-links' => SocialLinkController::class
+    ]);
 });
 
 Route::post('/contacts', ContactFormController::class);
