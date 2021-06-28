@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateContactDetailRequest extends FormRequest
+class UpdateSocialLinkRequest extends FormRequest
 {
     /**
      * Indicates if the validator should stop on the first rule failure.
@@ -31,10 +31,8 @@ class UpdateContactDetailRequest extends FormRequest
     public function rules()
     {
         return [
-            'phone' => 'required_without_all:email,address,contactPerson|string|max:20',
-            'email' => 'required_without_all:phone,address,contactPerson|email|max:255|unique:contact_details,email',
-            'address' => 'required_without_all:phone,email,contactPerson|string|max:200',
-            'contactPerson' => 'required_without_all:phone,email,address|string|max:100'
+            'name' => 'required_without_all:url|string|max:50',
+            'url' => 'required_without_all:name|max:255|unique:social_links,url'
         ];
     }
 }

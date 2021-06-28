@@ -17,7 +17,7 @@ class CreateSocialLinksTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('name');
-            $table->string('url');
+            $table->string('url')->unique();
             $table->foreignId('settings_id')
                 ->constrained()
                 ->onUpdate('cascade')

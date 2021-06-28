@@ -134,7 +134,7 @@ const DashboardGeneral = () => {
                                 label='Social link URL*'
                                 variant='outlined'
                                 InputProps={{
-                                    startAdornment: <InputAdornment position="start">https://</InputAdornment>,
+                                    startAdornment: <InputAdornment position="start">http(s)://</InputAdornment>,
                                 }}
                                 error={Boolean(meta.error)}
                                 helperText={meta.error}

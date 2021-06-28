@@ -32,7 +32,7 @@ class CreateContactDetailRequest extends FormRequest
     {
         return [
             'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:contact_details,email',
             'address' => 'required|string|max:200',
             'contactPerson' => 'required|string|max:100'
         ];

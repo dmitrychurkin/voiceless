@@ -177,7 +177,7 @@ const TabEntity = ({
                             color="textSecondary"
                             gutterBottom
                         >
-                            Contacts
+                            {title}
                         </Typography>
                         {isLoading ? (
                             <Preloader height='auto' />

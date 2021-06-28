@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Settings;
+use App\Http\Requests\{CreateSocialLinkRequest, UpdateSocialLinkRequest};
+use App\Http\Resources\SocialLinkResource;
 use App\SocialLink;
-use Illuminate\Http\Request;
 
 class SocialLinkController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param  \App\Settings  $settings
      * @return \Illuminate\Http\Response
      */
-    public function index(Settings $settings)
+    public function index()
     {
         //
     }
@@ -22,23 +21,25 @@ class SocialLinkController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Settings  $settings
-     * @return \Illuminate\Http\Response
+     * @param  \App\Http\Requests\CreateSocialLinkRequest  $request
+     * @return \App\Http\Resources\SocialLinkResource
      */
-    public function store(Request $request, Settings $settings)
+    public function store(CreateSocialLinkRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        return new SocialLinkResource(
+            SocialLink::create($validated)
+        );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Settings  $settings
-     * @param  \App\SocialLinks  $socialLinks
+     * @param  \App\SocialLink  $socialLink
      * @return \Illuminate\Http\Response
      */
-    public function show(Settings $settings, SocialLink $socialLinks)
+    public function show(SocialLink $socialLink)
     {
         //
     }
@@ -46,25 +47,32 @@ class SocialLinkController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Settings  $settings
-     * @param  \App\SocialLinks  $socialLinks
+     * @param  \App\Http\Requests\UpdateSocialLinkRequest $request
+     * @param  \App\SocialLink  $socialLink
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Settings $settings, SocialLink $socialLinks)
+    public function update(UpdateSocialLinkRequest $request, SocialLink $socialLink)
     {
-        //
+        $validated = $request->validated();
+
+        foreach($validated as $key => $value) {
+            $socialLink[$key] = $value;
+        }
+
+        $socialLink->save();
+
+        return response(null);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Settings  $settings
-     * @param  \App\SocialLinks  $socialLinks
+     * @param  \App\SocialLink  $socialLink
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Settings $settings, SocialLink $socialLinks)
+    public function destroy(SocialLink $socialLink)
     {
-        //
+        $socialLink->delete();
+        return response(null);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\{CreateContactDetailRequest, UpdateContactDetailRequest};
 use App\Http\Resources\ContactDetailResource;
-use App\{Settings, ContactDetail};
+use App\ContactDetail;
 class ContactDetailController extends Controller
 {
     /**
