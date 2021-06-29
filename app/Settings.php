@@ -28,4 +28,12 @@ class Settings extends Model
     {
         return $this->hasMany(ContactDetail::class);
     }
+
+    /**
+     * Get bank accounts
+     */
+    public function bankAccounts()
+    {
+        return $this->hasMany(BankAccount::class);
+    }
 }

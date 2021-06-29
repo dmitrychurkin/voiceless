@@ -23,7 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResources([
         'settings' => SettingsController::class,
         'contact-details' => ContactDetailController::class,
-        'social-links' => SocialLinkController::class
+        'social-links' => SocialLinkController::class,
+        'bank-account' => BankAccountController::class
     ]);
 });
 
