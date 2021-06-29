@@ -5,19 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\{CreateSocialLinkRequest, UpdateSocialLinkRequest};
 use App\Http\Resources\SocialLinkResource;
 use App\SocialLink;
-
 class SocialLinkController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -31,17 +20,6 @@ class SocialLinkController extends Controller
         return new SocialLinkResource(
             SocialLink::create($validated)
         );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\SocialLink  $socialLink
-     * @return \Illuminate\Http\Response
-     */
-    public function show(SocialLink $socialLink)
-    {
-        //
     }
 
     /**

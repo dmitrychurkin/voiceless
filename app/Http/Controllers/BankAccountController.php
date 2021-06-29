@@ -2,22 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\BankAccount;
 use App\Http\Requests\{CreateBankAccountRequest, UpdateBankAccountRequest};
 use App\Http\Resources\BankAccountResource;
-
+use App\BankAccount;
 class BankAccountController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -31,17 +20,6 @@ class BankAccountController extends Controller
         return new BankAccountResource(
             BankAccount::create($validated)
         );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**

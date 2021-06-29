@@ -8,17 +8,6 @@ use App\ContactDetail;
 class ContactDetailController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param  \App\ContactDetail  $contactDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function index(ContactDetail $contactDetail)
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\CreateContactDetailRequest  $request
@@ -31,17 +20,6 @@ class ContactDetailController extends Controller
         return new ContactDetailResource(
             ContactDetail::create($validated)
         );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\ContactDetail  $contactDetail
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ContactDetail $contactDetail)
-    {
-        //
     }
 
     /**

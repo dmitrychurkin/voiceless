@@ -20,12 +20,14 @@ Route::middleware('auth:sanctum')->group(function () {
         return new UserResource($request->user());
     });
 
-    Route::apiResources([
-        'settings' => SettingsController::class,
-        'contact-details' => ContactDetailController::class,
-        'social-links' => SocialLinkController::class,
-        'bank-account' => BankAccountController::class
-    ]);
+    Route::apiResource('settings', SettingsController::class)
+        ->only(['index']);
+    Route::apiResource('contact-details', ContactDetailController::class)
+        ->only(['store', 'update', 'destroy']);
+    Route::apiResource('social-links', SocialLinkController::class)
+        ->only(['store', 'update', 'destroy']);
+    Route::apiResource('bank-account', BankAccountController::class)
+        ->only(['store', 'update', 'destroy']);
 });
 
 Route::post('/contacts', ContactFormController::class);
