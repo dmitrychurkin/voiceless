@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\ForgotPasswordDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ForgotPasswordRequest extends FormRequest
@@ -33,5 +34,13 @@ class ForgotPasswordRequest extends FormRequest
         return [
             'email' => 'required|email'
         ];
+    }
+
+    /**
+     * @return ForgotPasswordDto
+     */
+    public function getDto(): ForgotPasswordDto
+    {
+        return new ForgotPasswordDto($this->get('email'));
     }
 }

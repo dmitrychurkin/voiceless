@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\AuthenticateDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AuthenticateRequest extends FormRequest
@@ -34,5 +35,17 @@ class AuthenticateRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'required|max:256'
         ];
+    }
+
+    /**
+     * @return AuthenticateDto
+     */
+    public function getDto(): AuthenticateDto
+    {
+        return new AuthenticateDto(
+            $this->get('email'),
+            $this->get('password'),
+            $this->has('remember')
+        );
     }
 }

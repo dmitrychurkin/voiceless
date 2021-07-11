@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthenticateRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Services\AuthService;
 use App\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -28,48 +29,33 @@ class AuthController extends Controller
      * Authenticates user
      *
      * @param AuthenticateRequest $request
+     * @param AuthService $authService
      * @return \Illuminate\Http\Response
      *         |\Illuminate\Contracts\Routing\ResponseFactory
      *         |\Illuminate\Http\RedirectResponse
      *         |\Illuminate\Http\JsonResponse
      */
-    public function authenticate(AuthenticateRequest $request)
+    public function authenticate(AuthenticateRequest $request, AuthService $authService)
     {
-        $validatedCredentials = $request->validated();
-
-        $credentials = [
-            'email' => $validatedCredentials['email'],
-            'password' => $validatedCredentials['password']
-        ];
-
-        if (Auth::attempt($credentials, $request->has('remember'))) {
-            $request->session()->regenerate();
-            // auth()->user();
-            return $request->wantsJson()
-                ? response(null)
-                : redirect()->intended('dashboard');
-        }
+        $authService->authenticate($request->getDto());
 
         return $request->wantsJson()
-            ? response()->json(['message' => __('auth.failed')])
-            : back()->withErrors(['email' => __('auth.failed')]);
+            ? response(null)
+            : redirect()->intended('dashboard');
     }
 
     /**
      * Logout user
      *
      * @param Request $request
+     * @param AuthService $authService
      * @return \Illuminate\Http\Response
      *         |\Illuminate\Contracts\Routing\ResponseFactory
      *         |\Illuminate\Http\Redirect
      */
-    public function logout(Request $request)
+    public function logout(Request $request, AuthService $authService)
     {
-        Auth::guard('web')->logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
+        $authService->logout();
 
         return $request->wantsJson()
             ? response(null)
@@ -80,25 +66,17 @@ class AuthController extends Controller
      * Sends password reset link via email
      *
      * @param ForgotPasswordRequest $request
+     * @param AuthService $authService
      * @return \Illuminate\Http\JsonResponse
      *         |\Illuminate\Http\RedirectResponse
      */
-    public function forgot(ForgotPasswordRequest $request)
+    public function forgot(ForgotPasswordRequest $request, AuthService $authService)
     {
-        $credentials = $request->validated();
-
-        $status = Password::sendResetLink($credentials);
-
-        $responseData = ['message' => __($status)];
-        if ($status === Password::RESET_LINK_SENT) {
-            return $request->wantsJson()
-                ? response()->json($responseData)
-                : back()->with(['status' => __($status)]);
-        }
+        $status = $authService->forgot($request->getDto());
 
         return $request->wantsJson()
-            ? response()->json($responseData)
-            : back()->withErrors(['email' => __($status)]);
+            ? response()->json(['message' => __($status)])
+            : back()->with(['status' => __($status)]);
     }
 
     /**
