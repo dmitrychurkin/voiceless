@@ -5,13 +5,13 @@ namespace App\DTOs;
 final class AuthenticateDto
 {
     /** @var string */
-    private $email;
+    private string $email;
 
     /** @var string */
-    private $password;
+    private string $password;
 
     /** @var bool */
-    private $hasRemember;
+    private bool $hasRemember;
 
     function __construct(
         string $email,

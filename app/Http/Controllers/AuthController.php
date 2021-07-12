@@ -82,83 +82,32 @@ class AuthController extends Controller
     /**
      * Displays password reset form
      *
-     * @param Request $request
      * @param string $passwordResetToken
      * @return \Illuminate\View\View
      *         |\Illuminate\Contracts\View\Factory
      *         |void
      */
-    public function showPasswordReset(Request $request, string $passwordResetToken)
+    public function showPasswordReset(string $passwordResetToken, AuthService $authService)
     {
-        if (!Arr::exists($request->query(), 'email')) {
-            return abort(404);
-        }
-
-        $email = $request->query()['email'];
-        $passwordResetRecord = DB::table('password_resets')->where('email', $email)->first();
-
-        if (!$passwordResetRecord) {
-            return abort(404);
-        }
-
-        if (!Hash::check($passwordResetToken, $passwordResetRecord->token)) {
-            return abort(404);
-        }
-
-        $isPasswordResetTokenExpired = now()
-            ->parse($passwordResetRecord->created_at)
-            ->addMinutes(config('auth.passwords.users.expire'))
-            ->isPast();
-        if ($isPasswordResetTokenExpired) {
-            return abort(404);
-        }
-
-        return view('admin');
+        return $authService->showPasswordReset($passwordResetToken)
+            ? view('admin')
+            : abort(404);
     }
 
     /**
      * Resets user's password
      *
      * @param ResetPasswordRequest $request
+     * @param AuthService $authService
      * @return \Illuminate\Http\JsonResponse
      *         |\Illuminate\Http\RedirectResponse
      */
-    public function reset(ResetPasswordRequest $request)
+    public function reset(ResetPasswordRequest $request, AuthService $authService)
     {
-        $validatedCredentials = $request->validated();
-
-        $user = User::where('email', $validatedCredentials['email'])->first();
-        if (Hash::check($validatedCredentials['password'], $user->password)) {
-            return $request->wantsJson()
-                ? response()->json([
-                    'message' => __('passwords.password_repeat')
-                ])
-                : back()->withErrors(['password' => [__('passwords.password_repeat')]]);
-        }
-
-        $status = Password::reset(
-            //$request->only('email', 'password', 'password_confirmation', 'token'),
-            $validatedCredentials,
-            function ($user, $password) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
-
-                $user->save();
-
-                event(new PasswordReset($user));
-            }
-        );
-
-        $responseData = ['message' => __($status)];
-        if ($status == Password::PASSWORD_RESET) {
-            return $request->wantsJson()
-                ? response()->json($responseData)
-                : redirect()->route('login')->with('status', __($status));
-        }
+        $status = $authService->reset($request->getDto());
 
         return $request->wantsJson()
-            ? response()->json($responseData)
-            : back()->withErrors(['email' => [__($status)]]);
+            ? response()->json(['message' => __($status)])
+            : redirect()->route('login')->with('status', __($status));
     }
 }

@@ -7,14 +7,16 @@ use Illuminate\Http\Request;
 
 final class AuthException extends Exception
 {
-    /**
-     * @var string
-     */
-    private $userMessage;
+    /** @var string */
+    private string $userMessage;
 
-    public function __construct(string $userMessage)
+    /** @var string */
+    private string $fieldName;
+
+    public function __construct(string $userMessage, string $fieldName = 'email')
     {
         $this->userMessage = $userMessage;
+        $this->fieldName = $fieldName;
         parent::__construct($userMessage);
     }
 
@@ -36,8 +38,10 @@ final class AuthException extends Exception
      */
     public function render(Request $request)
     {
+        $message = __($this->userMessage);
+
         return $request->wantsJson()
-            ? response()->json(['message' => __($this->userMessage)])
-            : back()->withErrors(['email' => __($this->userMessage)]);
+            ? response()->json(['message' => $message])
+            : back()->withErrors([$this->fieldName => $message]);
     }
 }

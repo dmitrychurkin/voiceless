@@ -31,6 +31,9 @@ Route::prefix('admin')->group(function () {
     Route::view('forgot-password', 'admin')->middleware('guest')->name('password.request');
     Route::post('forgot-password', [AuthController::class, 'forgot'])->name('password.email');
     Route::get('/reset-password/{token}', [AuthController::class, 'showPasswordReset'])->name('password.reset');
+    Route::get('/reset-password', function () {
+        return abort(404);
+    });
     Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 
     // Dashboard

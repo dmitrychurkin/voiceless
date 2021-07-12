@@ -5,7 +5,7 @@ namespace App\DTOs;
 final class ForgotPasswordDto
 {
     /** @var string */
-    private $email;
+    private string $email;
 
     function __construct(string $email)
     {
