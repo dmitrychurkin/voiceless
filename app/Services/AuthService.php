@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\DTOs\{AuthenticateDto, ForgotPasswordDto, ResetPasswordDto, UpdateUserPasswordDto};
 use App\Exceptions\AuthException;
-use App\Repositories\{PasswordResetRepository, UserRepository};
+use App\Repositories\PasswordReset\PasswordReset as PasswordResetRepository;
+use App\Repositories\User\User as UserRepository;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\{Arr, Str};
 use Illuminate\Support\Facades\{Auth, Hash, Password};

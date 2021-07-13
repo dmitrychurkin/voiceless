@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\PasswordReset;
 
-use App\Queries\PasswordResetQueries;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
-final class PasswordResetRepository implements PasswordResetQueries
+final class PasswordResetRepository implements PasswordReset
 {
     public function getPasswordResetByEmail(string $email): ?stdClass
     {

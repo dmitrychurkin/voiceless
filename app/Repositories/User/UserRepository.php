@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\User;
 
 use App\DTOs\UpdateUserPasswordDto;
-use App\Queries\UserQueries;
-use Illuminate\Support\Str;
-use App\User;
+use App\User as UserModel;
 
-final class UserRepository implements UserQueries
+final class UserRepository implements User
 {
-    public function getUserByEmail(string $email): ?User
+    public function getUserByEmail(string $email): ?UserModel
     {
-        return User::where('email', $email)->first();
+        return UserModel::where('email', $email)->first();
     }
 
     public function updatePassword(UpdateUserPasswordDto $updateUserPasswordDto): bool
