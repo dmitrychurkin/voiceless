@@ -7,7 +7,7 @@ final class ForgotPasswordDto
     /** @var string */
     private string $email;
 
-    function __construct(string $email)
+    public function __construct(string $email)
     {
         $this->email = $email;
     }

@@ -13,7 +13,7 @@ final class AuthenticateDto
     /** @var bool */
     private bool $hasRemember;
 
-    function __construct(
+    public function __construct(
         string $email,
         string $password,
         bool $hasRemember)

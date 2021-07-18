@@ -5,52 +5,57 @@ namespace App\Http\Controllers;
 use App\Http\Requests\{CreateContactDetailRequest, UpdateContactDetailRequest};
 use App\Http\Resources\ContactDetailResource;
 use App\ContactDetail;
+use App\Services\ContactDetailService;
+
 class ContactDetailController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\CreateContactDetailRequest  $request
+     * @param \App\Requests\CreateContactDetailRequest $createContactDetailRequest
+     * @param \App\Services\ContactDetailService $contactDetailService
+     *
      * @return \App\Http\Resources\ContactDetailResource
      */
-    public function store(CreateContactDetailRequest $request)
+    public function store(CreateContactDetailRequest $createContactDetailRequest, ContactDetailService $contactDetailService)
     {
-        $validated = $request->validated();
-
         return new ContactDetailResource(
-            ContactDetail::create($validated)
+            $contactDetailService->store($createContactDetailRequest->getDto())
         );
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateContactDetailRequest $request
-     * @param  \App\ContactDetail  $contactDetail
+     * @param \App\Requests\UpdateContactDetailRequest $updateContactDetailRequest
+     * @param \App\ContactDetail  $contactDetail
+     * @param \App\Services\ContactDetailService $contactDetailService
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContactDetailRequest $request, ContactDetail $contactDetail)
+    public function update(
+        UpdateContactDetailRequest $updateContactDetailRequest,
+        ContactDetail $contactDetail,
+        ContactDetailService $contactDetailService)
     {
-        $validated = $request->validated();
-
-        foreach($validated as $key => $value) {
-            $contactDetail[$key] = $value;
-        }
-
-        $contactDetail->save();
-
+        $contactDetailService->update(
+            $updateContactDetailRequest->getDto(),
+            $contactDetail
+        );
         return response(null);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ContactDetail  $contactDetail
+     * @param \App\ContactDetail  $contactDetail
+     * @param \App\Services\ContactDetailService $contactDetailService
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ContactDetail $contactDetail)
+    public function destroy(ContactDetail $contactDetail, ContactDetailService $contactDetailService)
     {
-        $contactDetail->delete();
+        $contactDetailService->destroy($contactDetail);
         return response(null);
     }
 }

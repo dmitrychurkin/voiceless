@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\UpdateContactDetailDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateContactDetailRequest extends FormRequest
@@ -36,5 +37,18 @@ class UpdateContactDetailRequest extends FormRequest
             'address' => 'required_without_all:phone,email,contactPerson|string|max:200',
             'contactPerson' => 'required_without_all:phone,email,address|string|max:100'
         ];
+    }
+
+    /**
+     * @return UpdateContactDetailDto
+     */
+    public function getDto(): UpdateContactDetailDto
+    {
+        return new UpdateContactDetailDto(
+            $this->get('phone'),
+            $this->get('email'),
+            $this->get('address'),
+            $this->get('contactPerson')
+        );
     }
 }

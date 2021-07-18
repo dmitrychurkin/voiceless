@@ -15,7 +15,7 @@ final class UpdateUserPasswordDto
     /** @var string */
     private string $rememberToken;
 
-    function __construct(User $user, string $password, string $rememberToken = '')
+    public function __construct(User $user, string $password, string $rememberToken = '')
     {
         $this->user = $user;
         $this->password = $password;

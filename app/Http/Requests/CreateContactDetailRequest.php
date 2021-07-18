@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\CreateContactDetailDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateContactDetailRequest extends FormRequest
@@ -36,5 +37,18 @@ class CreateContactDetailRequest extends FormRequest
             'address' => 'required|string|max:200',
             'contactPerson' => 'required|string|max:100'
         ];
+    }
+
+    /**
+     * @return CreateContactDetailDto
+     */
+    public function getDto(): CreateContactDetailDto
+    {
+        return new CreateContactDetailDto(
+            $this->get('phone'),
+            $this->get('email'),
+            $this->get('address'),
+            $this->get('contactPerson')
+        );
     }
 }

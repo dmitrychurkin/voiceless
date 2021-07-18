@@ -16,7 +16,7 @@ final class ResetPasswordDto
     /** @var string */
     private string $passwordConfirmation;
 
-    function __construct(
+    public function __construct(
         string $passwordResetToken,
         string $email,
         string $password,

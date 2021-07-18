@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\UpdateSocialLinkDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSocialLinkRequest extends FormRequest
@@ -34,5 +35,16 @@ class UpdateSocialLinkRequest extends FormRequest
             'name' => 'required_without_all:url|string|max:50',
             'url' => 'required_without_all:name|max:255|unique:social_links,url'
         ];
+    }
+
+    /**
+     * @return UpdateSocialLinkDto
+     */
+    public function getDto(): UpdateSocialLinkDto
+    {
+        return new UpdateSocialLinkDto(
+            $this->get('name'),
+            $this->get('url')
+        );
     }
 }

@@ -4,53 +4,57 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\{CreateSocialLinkRequest, UpdateSocialLinkRequest};
 use App\Http\Resources\SocialLinkResource;
+use App\Services\SocialLinkService;
 use App\SocialLink;
 class SocialLinkController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\CreateSocialLinkRequest  $request
+     * @param \App\Http\Requests\CreateSocialLinkRequest  $request
+     * @param \App\Services\SocialLinkService $socialLinkService
+     *
      * @return \App\Http\Resources\SocialLinkResource
      */
-    public function store(CreateSocialLinkRequest $request)
+    public function store(CreateSocialLinkRequest $request, SocialLinkService $socialLinkService)
     {
-        $validated = $request->validated();
-
         return new SocialLinkResource(
-            SocialLink::create($validated)
+            $socialLinkService->store($request->getDto())
         );
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateSocialLinkRequest $request
-     * @param  \App\SocialLink  $socialLink
+     * @param \App\Http\Requests\UpdateSocialLinkRequest $request
+     * @param \App\SocialLink  $socialLink
+     * @param \App\Services\SocialLinkService $socialLinkService
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSocialLinkRequest $request, SocialLink $socialLink)
+    public function update(
+        UpdateSocialLinkRequest $request,
+        SocialLink $socialLink,
+        SocialLinkService $socialLinkService)
     {
-        $validated = $request->validated();
-
-        foreach($validated as $key => $value) {
-            $socialLink[$key] = $value;
-        }
-
-        $socialLink->save();
-
+        $socialLinkService->update(
+            $request->getDto(),
+            $socialLink
+        );
         return response(null);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SocialLink  $socialLink
+     * @param \App\SocialLink  $socialLink
+     * @param \App\Services\SocialLinkService $socialLinkService
+     *
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SocialLink $socialLink)
+    public function destroy(SocialLink $socialLink, SocialLinkService $socialLinkService)
     {
-        $socialLink->delete();
+        $socialLinkService->destroy($socialLink);
         return response(null);
     }
 }

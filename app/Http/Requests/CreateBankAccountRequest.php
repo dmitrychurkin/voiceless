@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\DTOs\CreateBankAccountDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateBankAccountRequest extends FormRequest
@@ -35,5 +36,17 @@ class CreateBankAccountRequest extends FormRequest
             'accountName' => 'required|string|max:255|unique:bank_accounts,accountName',
             'accountNumber' => 'required|string|max:50'
         ];
+    }
+
+    /**
+     * @return CreateBankAccountDto
+     */
+    public function getDto(): CreateBankAccountDto
+    {
+        return new CreateBankAccountDto(
+            $this->get('bankName'),
+            $this->get('accountName'),
+            $this->get('accountNumber')
+        );
     }
 }
