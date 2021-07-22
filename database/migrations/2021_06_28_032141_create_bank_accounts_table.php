@@ -19,6 +19,10 @@ class CreateBankAccountsTable extends Migration
             $table->string('accountName');
             $table->string('accountNumber')->unique();
             $table->timestamps();
+            $table->foreignId('settings_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

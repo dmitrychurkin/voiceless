@@ -19,7 +19,7 @@ export const RANGES = {
     },
 };
 
-export const contactDetailsValidationSchema = Yup.object().shape({
+export const validationSchema = Yup.object().shape({
     contactDetails: unique(
         Yup.array()
             .of(

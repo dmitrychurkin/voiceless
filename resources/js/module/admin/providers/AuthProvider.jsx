@@ -1,24 +1,16 @@
-import React, { createContext, memo, useCallback, useEffect, useState } from "react";
+import React, { createContext, memo, useEffect, useState, useRef } from "react";
 import useApi from "../hooks/useApi";
 import useRequests from "../hooks/useRequests";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-
     const api = useApi();
+
     const { user } = useRequests();
+    const userFnRef = useRef(user);
 
     const [userState, setUserState] = useState();
-
-    const getUser = useCallback(async () => {
-        try {
-            const { data } = await user();
-            setUserState(data.data);
-        }catch {
-            setUserState(null);
-        }
-    }, [user]);
 
     useEffect(() => {
         const authInterceptor = api.interceptors.response.use(
@@ -37,8 +29,10 @@ const AuthProvider = ({ children }) => {
     }, [api]);
 
     useEffect(() => {
-        getUser();
-    }, [getUser]);
+        userFnRef.current()
+            .then(({ data }) => setUserState(data.data))
+            .catch(() => setUserState(null));
+    }, []);
 
     return (
         <AuthContext.Provider value={userState}>

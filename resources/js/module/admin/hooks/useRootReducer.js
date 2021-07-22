@@ -10,7 +10,8 @@ export const initialState = {
         isLoading: false,
         isVisited: false,
         contactDetails: [],
-        socialLinks: []
+        socialLinks: [],
+        bankAccounts: []
     }
 };
 

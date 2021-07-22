@@ -4,57 +4,58 @@ import useApi from "./useApi";
 const useRequests = () => {
     const api = useApi();
 
+    const requestHandler = useCallback(({ method = 'get', ...settings } = {}) =>
+        (extraSettings = {}) => api({ method, ...settings, ...extraSettings }), [api]);
+
+    const updateResource = useCallback((
+        { method = 'patch', url, ...settings } = {}
+    ) => ({ data, ...extraSettings } = {}) => api({
+        method,
+        url: `${url}/${data.id}`,
+        data: { ...data, id: undefined },
+        ...settings,
+        ...extraSettings
+    }), [api]);
+
+    const deleteResource = useCallback((
+        { method = 'delete', url, ...settings } = {}
+    ) => ({ data, ...extraSettings } = {}) => api({
+        method,
+        url: `${url}/${data.id}`,
+        ...settings,
+        ...extraSettings
+    }), [api]);
+
     return {
         // Meta
-        csrf: useCallback((
-            { method = 'get', url = '/sanctum/csrf-cookie', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
+        csrf: requestHandler({ url: '/sanctum/csrf-cookie' }),
 
         // User
-        user: useCallback((
-            { method = 'get', url = '/api/user', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
+        user: requestHandler({ url: '/api/user' }),
 
         // Auth
-        login: useCallback((
-            { method = 'post', url = '/admin/login', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
-        logout: useCallback((
-            { method = 'post', url = '/admin/logout', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
-        forgotPassword: useCallback((
-            { method = 'post', url = '/admin/forgot-password', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
-        resetPassword: useCallback((
-            { method = 'post', url = '/admin/reset-password', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
+        login: requestHandler({ method: 'post', url: '/admin/login' }),
+        logout: requestHandler({ method: 'post', url: '/admin/logout' }),
+        forgotPassword: requestHandler({ method: 'post', url: '/admin/forgot-password' }),
+        resetPassword: requestHandler({ method: 'post', url: '/admin/reset-password' }),
 
         // Dashboard
-        getGeneralSettings: useCallback((
-            { method = 'get', url = '/api/settings', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
+        getGeneralSettings: requestHandler({ url: '/api/settings' }),
 
         // Contact Details
-        updateContactDetail: useCallback((
-            { method = 'patch', url = '/api/contact-details', data, ...rest } = {}
-        ) => api({ method, url: `${url}/${data.id}`, data: { ...data, id: undefined }, ...rest }), [api]),
-        createContactDetail: useCallback((
-            { method = 'post', url = '/api/contact-details', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
-        deleteContactDetail: useCallback((
-            { method = 'delete', url = '/api/contact-details', data, ...rest } = {}
-        ) => api({ method, url: `${url}/${data.id}`, ...rest }), [api]),
+        updateContactDetail: updateResource({ url: '/api/contact-details' }),
+        createContactDetail: requestHandler({ method: 'post', url: '/api/contact-details' }),
+        deleteContactDetail: deleteResource({ url: '/api/contact-details' }),
 
         // Social Links
-        updateSocialLink: useCallback((
-            { method = 'patch', url = '/api/social-links', data, ...rest } = {}
-        ) => api({ method, url: `${url}/${data.id}`, data: { ...data, id: undefined }, ...rest }), [api]),
-        createSocialLink: useCallback((
-            { method = 'post', url = '/api/social-links', ...rest } = {}
-        ) => api({ method, url, ...rest }), [api]),
-        deleteSocialLink: useCallback((
-            { method = 'delete', url = '/api/social-links', data, ...rest } = {}
-        ) => api({ method, url: `${url}/${data.id}`, ...rest }), [api])
+        updateSocialLink: updateResource({ url: '/api/social-links' }),
+        createSocialLink: requestHandler({ method: 'post', url: '/api/social-links' }),
+        deleteSocialLink: deleteResource({ url: '/api/social-links' }),
+
+        // Bank Accounts
+        updateBankAccount: updateResource({ url: '/api/bank-account' }),
+        createBankAccount: requestHandler({ method: 'post', url: '/api/bank-account' }),
+        deleteBankAccount: deleteResource({ url: '/api/bank-account' })
     };
 };
 

@@ -1,28 +1,32 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useRef } from 'react';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import useGeneralActions from '../../hooks/useGeneralActions';
 import useStore from '../../hooks/useStore';
 import Contact from '../../entities/Contact';
 import SocialLink from '../../entities/SocialLink';
+import BankAccount from '../../entities/BankAccount';
 import TabEntity from '../../templates/TabEntity';
-import { contactDetailsValidationSchema, RANGES as contactDetailRanges } from '../../validators/contactDetail';
-import { socialLinksValidationSchema, RANGES as socialLinksRanges } from '../../validators/socialLink';
+import { validationSchema as contactDetailValidationSchema, RANGES as contactDetailRanges } from '../../validators/contactDetail';
+import { validationSchema as socialLinkValidationSchema, RANGES as socialLinkRanges } from '../../validators/socialLink';
+import { validationSchema as bankAccountValidationSchema, RANGES as bankAccountRanges } from '../../validators/bankAccount';
 
 const DashboardGeneral = () => {
     const { state: { general } } = useStore();
     const {
         fetchGeneralSettings,
         createContactDetail, updateContactDetail, deleteContactDetail,
-        createSocialLink, updateSocialLink, deleteSocialLink
+        createSocialLink, updateSocialLink, deleteSocialLink,
+        createBankAccount, updateBankAccount, deleteBankAccount
     } = useGeneralActions();
+    const generalSettingsFnRef = useRef(fetchGeneralSettings);
 
     useEffect(() => {
         if (!general.isVisited) {
-            fetchGeneralSettings()
+            generalSettingsFnRef.current()
                 .catch(({ response }) => console.error(response.data));
         }
-    }, [fetchGeneralSettings, general.isVisited]);
+    }, [general.isVisited]);
 
     return (
         <>
@@ -100,7 +104,7 @@ const DashboardGeneral = () => {
                 }}
                 formikProps={{
                     initialValues: { contactDetails: general.contactDetails },
-                    validationSchema: contactDetailsValidationSchema
+                    validationSchema: contactDetailValidationSchema
                 }}
             />
             <TabEntity
@@ -110,7 +114,7 @@ const DashboardGeneral = () => {
                 tabLabelFn={(socialLink, index) => socialLink.name || `Social link ${index + 1}`}
                 collection={general.socialLinks}
                 model={SocialLink}
-                maxTabs={socialLinksRanges.socialLinks.MAX}
+                maxTabs={socialLinkRanges.socialLinks.MAX}
                 fields={[
                     {
                         name: 'name',
@@ -152,7 +156,69 @@ const DashboardGeneral = () => {
                 }}
                 formikProps={{
                     initialValues: { socialLinks: general.socialLinks },
-                    validationSchema: socialLinksValidationSchema
+                    validationSchema: socialLinkValidationSchema
+                }}
+            />
+            <TabEntity
+                isLoading={general.isLoading}
+                title='Bank Accounts'
+                name='bankAccounts'
+                tabLabelFn={(bankAccount, index) => bankAccount.accountName || `Bank account ${index + 1}`}
+                collection={general.bankAccounts}
+                model={BankAccount}
+                maxTabs={bankAccountRanges.bankAccounts.MAX}
+                fields={[
+                    {
+                        name: 'bankName',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`bankName-${index}`}
+                                label='Bank name*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    },
+                    {
+                        name: 'accountName',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`accountName-${index}`}
+                                label='Account name*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    },
+                    {
+                        name: 'accountNumber',
+                        component: ({ field, meta, index }) => (
+                            <TextField
+                                {...field}
+                                id={`accountNumber-${index}`}
+                                label='Account number*'
+                                variant='outlined'
+                                error={Boolean(meta.error)}
+                                helperText={meta.error}
+                            />
+                        )
+                    }
+                ]}
+                actions={{
+                    create: createBankAccount,
+                    update: updateBankAccount,
+                    delete: deleteBankAccount
+                }}
+                dialogProps={{
+                    alertTitleFn: promptState => `Are you sure you want to delete ${promptState?.data.accountName}?`
+                }}
+                formikProps={{
+                    initialValues: { bankAccounts: general.bankAccounts },
+                    validationSchema: bankAccountValidationSchema
                 }}
             />
         </>

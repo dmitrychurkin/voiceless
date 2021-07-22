@@ -15,11 +15,12 @@ class SettingsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'about' => $this->about,
             'socialLinks' => $this->socialLinks
                 ->map(fn ($socialLink) => new SocialLinkResource($socialLink)),
             'contactDetails' => $this->contactDetails
-                ->map(fn ($contactDetail) => new ContactDetailResource($contactDetail))
+                ->map(fn ($contactDetail) => new ContactDetailResource($contactDetail)),
+            'bankAccounts' => $this->bankAccounts
+                ->map(fn ($bankAccount) => new BankAccountResource($bankAccount))
         ];
     }
 }

@@ -13,7 +13,7 @@ export const RANGES = {
     },
 };
 
-export const socialLinksValidationSchema = Yup.object().shape({
+export const validationSchema = Yup.object().shape({
     socialLinks: unique(
         Yup.array()
             .of(
@@ -27,7 +27,7 @@ export const socialLinksValidationSchema = Yup.object().shape({
                     ).max(RANGES.socialLinks.url.MAX, `Social link URL should be less then ${RANGES.socialLinks.url.MAX} characters`)
                 })
             ),
-        'Duplicate URL is not allowed',
+        'Duplicate URL are not allowed',
         a => a.url
     ).max(RANGES.socialLinks.MAX, `Maximum of ${RANGES.socialLinks.MAX} social links`)
 });

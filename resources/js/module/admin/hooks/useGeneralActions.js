@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import action from "../helpers/actionCreator";
 import useRequests from "./useRequests";
 import useStore from "./useStore";
+import useThunk from "./useThunk";
+import * as collectionModifiers from '../helpers/collectionModifiers';
 
 const SETTINGS_LOADING = 'GENERAL.SETTINGS_LOADING';
 const SETTINGS_VISITED = 'GENERAL.SETTINGS_VISITED';
@@ -12,14 +14,20 @@ const CONTACT_DETAIL_DELETE = 'GENERAL.SETTINGS.CONTACT_DETAIL_DELETE';
 const SOCIAL_LINK_UPDATE = 'GENERAL.SETTINGS.SOCIAL_LINK_UPDATE';
 const SOCIAL_LINK_CREATE = 'GENERAL.SETTINGS.SOCIAL_LINK_CREATE';
 const SOCIAL_LINK_DELETE = 'GENERAL.SETTINGS.SOCIAL_LINK_DELETE';
+const BANK_ACCOUNT_UPDATE = 'GENERAL.SETTINGS.BANK_ACCOUNT_UPDATE';
+const BANK_ACCOUNT_CREATE = 'GENERAL.SETTINGS.BANK_ACCOUNT_CREATE';
+const BANK_ACCOUNT_DELETE = 'GENERAL.SETTINGS.BANK_ACCOUNT_DELETE';
 
 const useGeneralActions = () => {
     const { dispatch } = useStore();
     const {
         getGeneralSettings,
         updateContactDetail, createContactDetail, deleteContactDetail,
-        updateSocialLink, createSocialLink, deleteSocialLink
+        updateSocialLink, createSocialLink, deleteSocialLink,
+        updateBankAccount, createBankAccount, deleteBankAccount
     } = useRequests();
+
+    const thunk = useThunk();
 
     return useMemo(() => ({
         fetchGeneralSettings: async () => {
@@ -30,54 +38,31 @@ const useGeneralActions = () => {
                 dispatch(action(SETTINGS_SUCCESS, response.data));
                 dispatch(action(SETTINGS_VISITED, true));
                 return response.data;
-            }finally {
+            } finally {
                 dispatch(action(SETTINGS_LOADING, false));
             }
         },
+
         // Contact Detail
-        updateContactDetail: async requestArgs => {
-            await updateContactDetail(requestArgs);
+        updateContactDetail: thunk({ type: CONTACT_DETAIL_UPDATE, api: updateContactDetail }),
+        createContactDetail: thunk({ type: CONTACT_DETAIL_CREATE, api: createContactDetail }),
+        deleteContactDetail: thunk({ type: CONTACT_DETAIL_DELETE, api: deleteContactDetail }),
 
-            dispatch(action(CONTACT_DETAIL_UPDATE, requestArgs.data));
-        },
-        createContactDetail: async requestArgs => {
-            const { data: response } = await createContactDetail(requestArgs);
-
-            dispatch(action(CONTACT_DETAIL_CREATE, response.data));
-
-            return response.data;
-        },
-        deleteContactDetail: async requestArgs => {
-            await deleteContactDetail(requestArgs);
-
-            dispatch(action(CONTACT_DETAIL_DELETE, requestArgs.data));
-        },
         // Social Link
-        updateSocialLink: async requestArgs => {
-            await updateSocialLink(requestArgs);
+        updateSocialLink: thunk({ type: SOCIAL_LINK_UPDATE, api: updateSocialLink }),
+        createSocialLink: thunk({ type: SOCIAL_LINK_CREATE, api: createSocialLink }),
+        deleteSocialLink: thunk({ type: SOCIAL_LINK_DELETE, api: deleteSocialLink }),
 
-            dispatch(action(SOCIAL_LINK_UPDATE, requestArgs.data));
-        },
-        createSocialLink: async requestArgs => {
-            const { data: response } = await createSocialLink(requestArgs);
-
-            dispatch(action(SOCIAL_LINK_CREATE, response.data));
-
-            return response.data;
-        },
-        deleteSocialLink: async requestArgs => {
-            await deleteSocialLink(requestArgs);
-
-            dispatch(action(SOCIAL_LINK_DELETE, requestArgs.data));
-        }
+        // Bank account
+        updateBankAccount: thunk({ type: BANK_ACCOUNT_UPDATE, api: updateBankAccount }),
+        createBankAccount: thunk({ type: BANK_ACCOUNT_CREATE, api: createBankAccount }),
+        deleteBankAccount: thunk({ type: BANK_ACCOUNT_DELETE, api: deleteBankAccount }),
     }), [
         dispatch,
-        updateContactDetail,
-        createContactDetail,
-        deleteContactDetail,
-        updateSocialLink,
-        createSocialLink,
-        deleteSocialLink
+        thunk,
+        updateContactDetail, createContactDetail, deleteContactDetail,
+        updateSocialLink, createSocialLink, deleteSocialLink,
+        updateBankAccount, createBankAccount, deleteBankAccount
     ]);
 };
 
@@ -103,70 +88,94 @@ const reducers = {
             isVisited: action.payload
         }
     }),
-    [CONTACT_DETAIL_UPDATE]: (state, action) => {
-        const contactDetails = state.general.contactDetails.map(contactDetail => {
-            if (contactDetail.id === action.payload.id) {
-                return {
-                    ...contactDetail,
-                    ...action.payload
-                };
-            }
-            return contactDetail;
-        });
-
-        return {
-            ...state,
-            general: {
-                ...state.general,
-                contactDetails
-            }
-        };
-    },
+    [CONTACT_DETAIL_UPDATE]: (state, action) => ({
+        ...state,
+        general: {
+            ...state.general,
+            contactDetails: collectionModifiers.updateCollection(
+                state.general.contactDetails,
+                action.payload
+            )
+        }
+    }),
     [CONTACT_DETAIL_CREATE]: (state, action) => ({
         ...state,
         general: {
             ...state.general,
-            contactDetails: [...state.general.contactDetails, action.payload]
+            contactDetails: collectionModifiers.addToCollection(
+                state.general.contactDetails,
+                action.payload
+            )
         }
     }),
     [CONTACT_DETAIL_DELETE]: (state, action) => ({
         ...state,
         general: {
             ...state.general,
-            contactDetails: state.general.contactDetails.filter(contactDetail => contactDetail.id !== action.payload.id)
+            contactDetails: collectionModifiers.removeFromCollection(
+                state.general.contactDetails,
+                action.payload
+            )
         }
     }),
-    [SOCIAL_LINK_UPDATE]: (state, action) => {
-        const socialLinks = state.general.socialLinks.map(socialLink => {
-            if (socialLink.id === action.payload.id) {
-                return {
-                    ...socialLink,
-                    ...action.payload
-                };
-            }
-            return socialLink;
-        });
-
-        return {
-            ...state,
-            general: {
-                ...state.general,
-                socialLinks
-            }
-        };
-    },
+    [SOCIAL_LINK_UPDATE]: (state, action) => ({
+        ...state,
+        general: {
+            ...state.general,
+            socialLinks: collectionModifiers.updateCollection(
+                state.general.socialLinks,
+                action.payload
+            )
+        }
+    }),
     [SOCIAL_LINK_CREATE]: (state, action) => ({
         ...state,
         general: {
             ...state.general,
-            socialLinks: [...state.general.socialLinks, action.payload]
+            socialLinks:collectionModifiers.addToCollection(
+                state.general.socialLinks,
+                action.payload
+            )
         }
     }),
     [SOCIAL_LINK_DELETE]: (state, action) => ({
         ...state,
         general: {
             ...state.general,
-            socialLinks: state.general.socialLinks.filter(socialLink => socialLink.id !== action.payload.id)
+            socialLinks: collectionModifiers.removeFromCollection(
+                state.general.socialLinks,
+                action.payload
+            )
+        }
+    }),
+    [BANK_ACCOUNT_UPDATE]: (state, action) => ({
+        ...state,
+        general: {
+            ...state.general,
+            bankAccounts: collectionModifiers.updateCollection(
+                state.general.bankAccounts,
+                action.payload
+            )
+        }
+    }),
+    [BANK_ACCOUNT_CREATE]: (state, action) => ({
+        ...state,
+        general: {
+            ...state.general,
+            bankAccounts: collectionModifiers.addToCollection(
+                state.general.bankAccounts,
+                action.payload
+            )
+        }
+    }),
+    [BANK_ACCOUNT_DELETE]: (state, action) => ({
+        ...state,
+        general: {
+            ...state.general,
+            bankAccounts: collectionModifiers.removeFromCollection(
+                state.general.bankAccounts,
+                action.payload
+            )
         }
     })
 };
