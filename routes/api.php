@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
         ->only(['store', 'update', 'destroy']);
     Route::apiResource('social-links', SocialLinkController::class)
         ->only(['store', 'update', 'destroy']);
-    Route::apiResource('bank-account', BankAccountController::class)
+    Route::apiResource('bank-accounts', BankAccountController::class)
         ->only(['store', 'update', 'destroy']);
 });
 

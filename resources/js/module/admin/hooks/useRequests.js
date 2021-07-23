@@ -53,9 +53,9 @@ const useRequests = () => {
         deleteSocialLink: deleteResource({ url: '/api/social-links' }),
 
         // Bank Accounts
-        updateBankAccount: updateResource({ url: '/api/bank-account' }),
-        createBankAccount: requestHandler({ method: 'post', url: '/api/bank-account' }),
-        deleteBankAccount: deleteResource({ url: '/api/bank-account' })
+        updateBankAccount: updateResource({ url: '/api/bank-accounts' }),
+        createBankAccount: requestHandler({ method: 'post', url: '/api/bank-accounts' }),
+        deleteBankAccount: deleteResource({ url: '/api/bank-accounts' })
     };
 };
 
