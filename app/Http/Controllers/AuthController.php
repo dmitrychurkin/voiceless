@@ -2,19 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AuthenticateRequest;
-use App\Http\Requests\ForgotPasswordRequest;
-use App\Http\Requests\ResetPasswordRequest;
-use App\Services\AuthService;
-use App\User;
-use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Requests\{AuthenticateRequest, ForgotPasswordRequest, ResetPasswordRequest};
+use App\Services\Auth\Auth as AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {

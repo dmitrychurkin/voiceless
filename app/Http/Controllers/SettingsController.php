@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SettingsResource;
-use App\Services\SettingsService;
-use App\Settings;
+use App\Services\Settings\Settings as SettingsService;
 
 class SettingsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @param \App\Services\SettingsService $settingsService
+     * @param \App\Services\Settings\Settings $settingsService
      *
      * @return \App\Http\Resources\SettingsResource
      */

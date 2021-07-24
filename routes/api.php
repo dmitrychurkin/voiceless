@@ -28,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
         ->only(['store', 'update', 'destroy']);
     Route::apiResource('bank-accounts', BankAccountController::class)
         ->only(['store', 'update', 'destroy']);
+    Route::apiResource('medias', MediaController::class)
+        ->only(['store']);
+    Route::apiResource('albums.medias', MediaController::class)->shallow();
 });
 
 Route::post('/contacts', ContactFormController::class);

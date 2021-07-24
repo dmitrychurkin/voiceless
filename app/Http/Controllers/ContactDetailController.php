@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\{CreateContactDetailRequest, UpdateContactDetailRequest};
 use App\Http\Resources\ContactDetailResource;
 use App\ContactDetail;
-use App\Services\ContactDetailService;
+use App\Services\ContactDetail\ContactDetail as ContactDetailService;
 
 class ContactDetailController extends Controller
 {
@@ -13,7 +13,7 @@ class ContactDetailController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Requests\CreateContactDetailRequest $createContactDetailRequest
-     * @param \App\Services\ContactDetailService $contactDetailService
+     * @param \App\Services\ContactDetail\ContactDetail $contactDetailService
      *
      * @return \App\Http\Resources\ContactDetailResource
      */
@@ -29,7 +29,7 @@ class ContactDetailController extends Controller
      *
      * @param \App\Requests\UpdateContactDetailRequest $updateContactDetailRequest
      * @param \App\ContactDetail  $contactDetail
-     * @param \App\Services\ContactDetailService $contactDetailService
+     * @param \App\Services\ContactDetail\ContactDetail $contactDetailService
      *
      * @return \Illuminate\Http\Response
      */
@@ -49,7 +49,7 @@ class ContactDetailController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\ContactDetail  $contactDetail
-     * @param \App\Services\ContactDetailService $contactDetailService
+     * @param \App\Services\ContactDetail\ContactDetail $contactDetailService
      *
      * @return \Illuminate\Http\Response
      */

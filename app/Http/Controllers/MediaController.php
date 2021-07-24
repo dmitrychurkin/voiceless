@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Album;
 use App\Media;
 use Illuminate\Http\Request;
 
@@ -10,9 +11,10 @@ class MediaController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\Album  $album
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Album $album)
     {
         //
     }
@@ -21,9 +23,10 @@ class MediaController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Album  $album
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Album $album)
     {
         //
     }
@@ -31,10 +34,11 @@ class MediaController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  \App\Album  $album
      * @param  \App\Media  $media
      * @return \Illuminate\Http\Response
      */
-    public function show(Media $media)
+    public function show(Album $album, Media $media)
     {
         //
     }
@@ -43,10 +47,11 @@ class MediaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Album  $album
      * @param  \App\Media  $media
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Media $media)
+    public function update(Request $request, Album $album, Media $media)
     {
         //
     }
@@ -54,10 +59,11 @@ class MediaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \App\Album  $album
      * @param  \App\Media  $media
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Media $media)
+    public function destroy(Album $album, Media $media)
     {
         //
     }

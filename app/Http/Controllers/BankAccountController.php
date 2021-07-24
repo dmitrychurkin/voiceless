@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\{CreateBankAccountRequest, UpdateBankAccountRequest};
 use App\Http\Resources\BankAccountResource;
 use App\BankAccount;
-use App\Services\BankAccountService;
+use App\Services\BankAccount\BankAccount as BankAccountService;
 
 class BankAccountController extends Controller
 {
@@ -13,7 +13,7 @@ class BankAccountController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\CreateBankAccountRequest  $request
-     * @param \App\Services\BankAccountService $bankAccountService
+     * @param \App\Services\BankAccount\BankAccount $bankAccountService
      *
      * @return \App\Http\Resources\BankAccountResource
      */
@@ -29,7 +29,7 @@ class BankAccountController extends Controller
      *
      * @param \App\Http\Requests\UpdateBankAccountRequest  $request
      * @param \App\BankAccount  $bankAccount
-     * @param \App\Services\BankAccountService $bankAccountService
+     * @param \App\Services\BankAccount\BankAccount $bankAccountService
      *
      * @return \Illuminate\Http\Response
      */
@@ -49,7 +49,7 @@ class BankAccountController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\BankAccount  $bankAccount
-     * @param \App\Services\BankAccountService $bankAccountService
+     * @param \App\Services\BankAccount\BankAccount $bankAccountService
      *
      * @return \Illuminate\Http\Response
      */
