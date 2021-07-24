@@ -5,19 +5,6 @@ namespace App\Services\Uploader;
 
 final class ImgBBResponse
 {
-    /*
-      $table->char('hashid');
-            $table->string('imageUrl');
-            $table->string('thumbUrl');
-            $table->string('mediumUrl');
-            $table->string('deleteUrl');
-            $table->char('mime');
-            $table->char('extension');
-            $table->string('filename');
-            $table->string('size');
-            $table->string('title')->nullable();
-            $table->string('expiration')->nullable();
-     */
     private string $id;
 
     private string $title;
@@ -42,17 +29,18 @@ final class ImgBBResponse
 
     public function __construct(array $data)
     {
-        $this->id = data_get($data, 'id');
-        $this->title = data_get($data, 'title');
-        $this->size = data_get($data, 'size');
-        $this->expiration = data_get($data, 'expiration');
+        $this->id = $data['id'];
+        $this->title = $data['title'];
+        $this->size = $data['size'];
+        $this->expiration = $data['expiration'];
+        $this->deleteUrl = $data['delete_url'];
+
         $this->mime = data_get($data, 'image.mime');
         $this->fileName = data_get($data, 'image.filename');
         $this->extension = data_get($data, 'image.extension');
         $this->imageUrl = data_get($data, 'image.url');
         $this->thumbUrl = data_get($data, 'thumb.url');
         $this->mediumUrl = data_get($data, 'medium.url', '');
-        $this->deleteUrl = data_get($data, 'delete_url');
     }
 
     public function getId()

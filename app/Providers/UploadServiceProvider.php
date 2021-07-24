@@ -23,7 +23,7 @@ final class UploadServiceProvider extends ServiceProvider implements DeferrableP
                 'key' => $key,
                 'endpoint' => $endpoint,
                 'expiration' => $expiration
-            ] = $uploader['drivers'][$driver];
+            ] = data_get($uploader, "drivers.{$driver}");
 
             return new ImgBBService(
                 new ImgBBConfig(

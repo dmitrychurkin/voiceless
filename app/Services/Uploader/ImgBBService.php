@@ -60,6 +60,6 @@ final class ImgBBService implements Uploader
             throw new UploaderException($statusCode, data_get($responseContents, 'error.message', 'Bad request'));
         }
 
-        return new ImgBBResponse(data_get($responseContents, 'data'));
+        return new ImgBBResponse($responseContents['data']);
     }
 }
