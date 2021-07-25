@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Uploader;
+namespace App\Services\Uploader\ImgBB;
 
+use App\Services\Uploader\Uploadable;
 use Illuminate\Http\UploadedFile;
 
 final class ImgBBResource implements ImgBBAttributes, Uploadable

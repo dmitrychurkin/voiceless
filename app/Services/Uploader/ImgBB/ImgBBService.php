@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Services\Uploader;
+namespace App\Services\Uploader\ImgBB;
 
 use App\Exceptions\UploaderException;
+use App\Services\Uploader\{Uploader, Uploadable};
 use GuzzleHttp\ClientInterface;
 
 
@@ -14,10 +15,14 @@ final class ImgBBService implements Uploader
     private ClientInterface $httpClient;
 
     public function __construct(
-        ImgBBConfig $config,
+        array $config,
         ClientInterface $httpClient
     ) {
-        $this->config = $config;
+        $this->config = new ImgBBConfig(
+            $config['key'],
+            $config['endpoint'],
+            $config['expiration']
+        );
         $this->httpClient = $httpClient;
     }
 

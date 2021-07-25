@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
-use App\Services\Uploader\{Uploader, ImgBBService, ImgBBConfig};
+use App\Services\Uploader\Uploader;
+use App\Services\Uploader\ImgBB\ImgBBService;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
 final class UploadServiceProvider extends ServiceProvider implements DeferrableProvider
 {
+    private static array $drivers = [
+        'imgBB' => ImgBBService::class
+    ];
+
     /**
      * Register any application services.
      *
@@ -19,18 +24,9 @@ final class UploadServiceProvider extends ServiceProvider implements DeferrableP
         $this->app->singleton(Uploader::class, function () {
             $uploader = config('uploader');
             $driver = $uploader['default'];
-            [
-                'key' => $key,
-                'endpoint' => $endpoint,
-                'expiration' => $expiration
-            ] = data_get($uploader, "drivers.{$driver}");
 
-            return new ImgBBService(
-                new ImgBBConfig(
-                    $key,
-                    $endpoint,
-                    $expiration
-                ),
+            return new self::$drivers[$driver](
+                data_get($uploader, "drivers.{$driver}"),
                 new Client()
             );
         });

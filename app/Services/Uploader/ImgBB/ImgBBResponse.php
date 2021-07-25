@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Uploader;
+namespace App\Services\Uploader\ImgBB;
 
 
 final class ImgBBResponse
